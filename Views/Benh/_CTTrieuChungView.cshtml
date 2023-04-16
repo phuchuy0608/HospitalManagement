@@ -1,0 +1,11 @@
+﻿@using HospitalManagement_Entities.Models.ViewModel;
+@model CTrieuChungModel
+
+<tr>
+    <td style="display:none"><input name="MaBenh" class="inputCTTrieuChung" data-val="true" data-val-required="The id field is required." id="MaBenh" type="hidden" value="@Model.MaBenh"></td>
+    <td style="display:none"><input name="MaTrieuChung" class="inputCTTrieuChung" data-val="true" data-val-required="The id field is required." id="MaTrieuChung" type="hidden" value="@Model.MaTrieuChung"></td>
+    <td><input type="text" class="form-control inputCTTrieuChung" id="TenTrieuChung" name="TenTrieuChung" value="@Model.TenTrieuChung" @(Model.MaTrieuChung==Guid.Empty?"":"disabled") /> </td>
+    <td class="text-center"> <button class="btn btn-danger btn-sm  remove"> <i class="fa fa-trash"></i></button></td>
+</tr>
+
+

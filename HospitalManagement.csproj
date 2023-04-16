@@ -1,0 +1,94 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>745699d3-9871-4bf5-8b06-91bf6563e914</UserSecretsId>
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+    <None Include="Areas\Identity\Pages\Account\AccessDenied.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\ExternalLogin.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Index.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Login.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\ChangePassword.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\ExternalLogins.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\_ManageNav.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Register.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\_ViewImports.cshtml" />
+    <None Include="Areas\Identity\Pages\_ValidationScriptsPartial.cshtml" />
+    <None Include="Areas\Identity\Pages\_ViewImports.cshtml" />
+    <None Include="Areas\Identity\Pages\_ViewStart.cshtml" />
+  </ItemGroup>
+
+	<ItemGroup>
+
+		<PackageReference Include="DevExpress.Xpo" Version="22.2.4" />
+
+		<PackageReference Include="Hangfire.Dashboard.Basic.Authentication" Version="5.0.0" />
+
+		<PackageReference Include="MailKit" Version="3.5.0" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.11" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.11" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.11" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Cors" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.11" />
+
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.11">
+
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+
+
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+
+
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+
+
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+
+
+		<PackageReference Include="MySql.Data.EntityFramework" Version="8.0.32" />
+
+
+		<PackageReference Include="OtpSharp.Core" Version="1.0.0" />
+
+
+		<PackageReference Include="QRCoder" Version="1.4.2" />
+		<PackageReference Include="Select.HtmlToPdf.NetCore" Version="21.1.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+		<PackageReference Include="X.PagedList.Mvc.Core" Version="8.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.10" />
+
+
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.7.25" />
+		<PackageReference Include="Hangfire.Core" Version="1.7.25" />
+		<PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
+		<PackageReference Include="Hangfire.SqlServer" Version="1.7.25" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\HospitalManagement_Entites\HospitalManagement_Entites.csproj" />
+	</ItemGroup>
+</Project>

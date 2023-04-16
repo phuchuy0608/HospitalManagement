@@ -1,0 +1,304 @@
+﻿@model List<HospitalManagement.Models.PhieuDatLich>
+@{
+    ViewData["Title"] = "LỊCH SỬ ĐẶT LỊCH";
+    Layout = "~/Views/Shared/GuestLayout.cshtml";
+}
+
+<style>   
+
+    .OTP {
+        display: flex;
+        flex-flow: column;
+        height: 100%;
+        align-items: space-around;
+        justify-content: center;
+    }
+
+        .OTP h3 {
+            font-family: Arial, Helvetica, sans-serif;
+            color: black;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+    .userInput {
+        display: grid;
+        grid-template-columns: 40px 40px 40px 40px 40px 40px;
+        grid-gap: 10px;
+        justify-content: center;
+    }
+
+    .userInput input {
+        height: 40px;
+        border: none;
+        border-bottom: 2px solid #27AE60;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        color:black;
+    }
+
+    .userInput input:focus {
+        outline: none;
+    }
+
+    .comfirm-otp {
+        width: 200px;
+        height: 40px;
+        border: none;
+        background-color: #27AE60;
+        margin: 20px auto 10px auto;
+        font-size: 18px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .btn-close-modal {
+        width: 150px;
+        height: 40px;
+        border: none;
+        background-color: #e9ecef;
+        margin: 0 auto 10px auto;
+        font-size: 18px;
+        font-weight: 600;
+        color: #000;
+    }
+    .userInput input::-webkit-outer-spin-button,
+    .userInput input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    @@media only screen and (max-width: 600px) {
+        .ltn__utilize-menu-inner {
+            margin-left: 20px;
+        }
+
+        .tblheader th {
+            font-size: 10px;
+        }
+
+        #tblLichSuDatLich td a {
+            font-size: 10px;
+        }
+        .not-found h6 a{
+            font-size: 10px;
+        }
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-8 m-auto">
+        <div class="ltn__form-box contact-form-box box-shadow white-bg">
+            <h4 class="title-2">Lịch đặt lịch của bạn</h4>
+            <div id="contact-form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-item input-item-email">
+                            <input style="color:darkslategrey" id="SDT" type="text" placeholder="Mời bạn nhập số điện thoại">
+                        </div>
+                        <div class="mb-2 d-none" style="margin-top:-15px" id="textErrorSDT"><span class="text-danger">Vui lòng nhập số điện thoại</span></div>
+                    </div>
+                </div>
+                <div class="btn-wrapper mt-0">
+                   @* <button class="btn theme-btn-1 btn-effect-1 text-uppercase" onclick="OpenLichSuDatLich()">Xem lịch sử</button>*@
+                    
+                    <button class="btn theme-btn-1 btn-effect-1 text-uppercase" onclick="GetOTP()">Xem lịch sử</button>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <!-- Utilize Cart Menu Start -->
+        <div id="ltn__utilize-cart-menu" class="ltn__utilize-cart-menu pt-10">
+            <div class="ltn__utilize-menu-inner ltn__scrollbar">
+                <div class="ltn__utilize-menu-head">
+                    <span class="ltn__utilize-menu-title">Lịch sử khám</span>
+                </div>
+
+                <!--Tiêu Đề-->
+                <div class="mini-cart-product-area">                    
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-header tblheader">
+                                <th class="head-item ">Họ và tên</th>
+                                <th class="head-item text-center">Số điện thoại</th>
+                                <th class="head-item text-center">Ngày khám</th>
+                                <th class="head-item text-center">Mã phiếu khám</th>
+                            </tr>
+                        </thead>
+                        <!--Show dữ liệu lịch sử khám-->
+                        <tbody id="ShowLichSu">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--Dữ liệu-->
+                @*<div class="mini-cart-product-area">
+                    <div class="mini-cart-item clearfix">
+                        <div id="ShowLichSu" class="mini-cart-info row">
+
+
+                        </div>
+                    </div>
+                </div>*@
+
+            </div>
+        </div>
+        <!-- Utilize Cart Menu End -->
+    </div>
+</div>
+
+<!-- Modal Tổng -->
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <div class="modal-title" style="font-size: 17px;text-transform:uppercase;color:#3c8dbc"><strong id="myModalTitle"></strong></div>
+            </div>
+            <div class="modal-body">
+
+                <div id="myModalContent">
+
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="text-right">
+                    <button type="button" class="btn btn-danger btn-sm" id="btclose" data-bs-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Đóng</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- Modal OTP -->
+<div class="modal fade" id="modelOTP" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="OTP">
+                    <h3>NHẬP MÃ OTP</h3>
+                    <div class="userInput">
+                        <input type="number" id='ist' maxlength="1" onkeyup="clickEvent(this,'sec')">
+                        <input type="number" id="sec" maxlength="1" onkeyup="clickEvent(this,'third')">
+                        <input type="number" id="third" maxlength="1" onkeyup="clickEvent(this,'fourth')">
+                        <input type="number" id="fourth" maxlength="1" onkeyup="clickEvent(this,'fifth')">
+                        <input type="number" id="fifth" maxlength="1" onkeyup="clickEvent(this,'sixth')">
+                        <input type="number" id="sixth" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==1) return false;">
+                    </div>
+                    <div class="text-center mt-3 d-none" id="textErrorOTP"><span class="text-danger">Mã xác thực không đúng</span></div>
+                </div>
+            </div>
+            <button class="comfirm-otp" type="button" onclick="OpenLichSuDatLich()">Xác nhận</button>
+            <button class="btn-close-modal" onclick="hideModal('modelOTP')">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function clickEvent(first, last) {
+        if (first.value.length) {
+            document.getElementById(last).focus();            
+        }
+    }
+
+    function hideModal(id) {
+        $('body').removeAttr("style")
+        $('body').removeClass("modal-open")
+
+        $(".modal-backdrop").remove()
+        $('#' + id).modal('hide');
+
+
+    }
+
+    function GetOTP() {
+        if ($('#SDT').val() == '') {
+            $('#textErrorSDT').removeClass("d-none");
+        }
+        else {
+            $('#textErrorSDT').addClass("d-none");
+            $.ajax({
+                url: "/Home/Generate",
+                type: 'GET',
+                data: {
+                    SDT: $('#SDT').val()
+                },
+                success: function (response) {
+                    console.log(response);
+                    $('#modelOTP').modal('show');
+                }
+            });
+        }        
+    }
+
+
+
+    function OpenLichSuDatLich() {
+        var _otp = String($('#ist').val()) + String($('#sec').val()) + String($('#third').val()) + String($('#fourth').val()) + String($('#fifth').val()) + String($('#sixth').val())
+        
+        $.ajax({
+            url: "/Home/SearchDatLichByPhoneNumber",
+            type: 'GET',
+            data: {
+                SDT: $('#SDT').val(),
+                otp: _otp
+            },
+            success: function (response) {
+                if (response.status == -3) {
+                    $('#textErrorOTP').removeClass("d-none");
+                }
+                else {
+                    hideModal('modelOTP');
+                    $("#ShowLichSu").html("");
+                    if (response.status == -2) {
+                        $("#ShowLichSu").append(`
+                            <td class="col-sm-12 text-center text-danger not-found" colspan="4">
+                                <h6 style="font-weight:bold"><a href="#">Không tìm thấy</a></h6>
+                            </td>
+                    `)
+                    }
+                    else {
+                        JSON.parse(response).forEach(function (item) {
+
+                            var stringDate = new Date(item.NgayKham);
+                            var dd = stringDate.getDate();
+                            var MM = stringDate.getMonth();
+                            var yyyy = stringDate.getFullYear();
+                            var hh = stringDate.getHours();
+                            var mm = stringDate.getMinutes();
+                            var ss = stringDate.getSeconds();
+                            var ngayKham = dd + "/" + MM + "/" + yyyy + ", " + hh + ":" + mm + ":" + ss;
+                            $("#ShowLichSu").append(`                                
+                                <tr class="table-body" style="background-color: white;" id="tblLichSuDatLich">
+                                    <td class="body-item"><a>${item.TenBN}</a></td>
+                                    <td class="body-item text-center"><a>${item.SDT}</a></td>
+                                    <td class="body-item text-center"><a>${ngayKham}</a></td>
+                                    <td class="body-item text-center">
+                                        <a id="ButtonChiTiet" style="color:blue">${item.MaPhieu}</a>
+                                    </td>
+                                </tr>
+
+                    `)
+
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+
+</script>
+
+
+
+
+

@@ -1,0 +1,123 @@
+
+
+@model HospitalManagement.Models.NhanVienYte
+
+<style>
+    .box-modal {
+        padding-inline: 5%;
+    }
+    .box-title-1 {
+        background-color: white;
+        border-left: 8px solid rgb(82, 183, 136);
+    }
+        .box-title-1 h4 {
+            padding: 2%;
+            font-size: 35px;
+            font-weight: 400;
+        }
+    .box-left-1 {
+        text-align: center;
+    }
+    .detail-img {
+        width: 250px;
+        height: 250px;
+        object-fit: cover;
+        object-position: center center;
+        border-radius: 3%;
+    }
+    .box-right-1 .box-right-top h1 {
+        font-weight: bold;
+        color: rgb(82, 183, 136);
+    }
+    .box-right-1 .box-right-top .box-role {
+        font-weight: 300;
+        font-size: 25px;
+    }
+    .box-right-item h6 {
+        font-size: 20px;
+        margin-left: 10px;
+    }
+</style>
+
+<div class="container-fluid" id="pannelNguoiDung">
+    <div class="box-title-1 mb-4">
+        <h4>Thông tin nhân viên y tế</h4>
+    </div>
+    <div class="box-modal row m-4">
+        <!--Phần hình ảnh-->
+        <div class="box-left-1 col-sm-4">
+             <img class="detail-img" src="~/images/NguoiDung/@Model.Hinh" />
+        </div>
+        <div class="box-right-1 col-sm-8">
+            <div class="box-right-top col-12 row mb-4">
+                <h1 class="box-name">@Model.HoTen</h1>
+                <h5 class="box-role">
+                    Chức vụ :
+                    @if (Model.ChucVu == 1)
+                    {
+                        @("Nhân viên y tế")
+                    }
+                    else if (Model.ChucVu == 2)
+                    {
+                        @("Bác sĩ")
+                    }
+                    else
+                    {
+                        @("Dược sĩ")
+                    }
+                </h5>
+            </div>
+            <div class="box-right-item row col-12">
+                <div class="col-sm-4">
+                    <h6>Email</h6>
+                </div>
+                <div class="col-sm-8">
+                    <h6 style="font-weight: 600">
+                        @Model.Email
+                    </h6>
+                </div>
+            </div>
+            <div class="box-right-item row col-12">
+                <div class="col-sm-4">
+                    <h6>
+                        Số điện thoại
+                    </h6>
+                </div>
+                <div class="col-sm-8">
+                    <h6 style="font-weight: 600">
+                        @Model.PhoneNumber
+                    </h6>
+                </div>
+            </div>
+            <div class="box-right-item row col-12">
+                <div class="col-sm-4">
+                    <h6>
+                        Chuyên khoa
+                    </h6>
+                </div>
+                <div class="col-sm-8">
+                    <h6 style="font-weight: 600">
+                        @(Model.ChucVu==2?Model.ChuyenKhoaNavigation.TenCK:"Không có")
+                    </h6>
+                </div>
+            </div>
+            <div class="box-right-item row col-12">
+                <div class="col-sm-4">
+                    <h6>
+                        Trạng thái
+                    </h6>
+                </div>
+                <div class="col-sm-8">
+                    <h6 style="font-weight: 600">
+                        @(Model.TrangThai?"Hoạt động":"Không hoạt động")
+                    </h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

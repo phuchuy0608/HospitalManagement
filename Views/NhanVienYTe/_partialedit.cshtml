@@ -1,0 +1,101 @@
+
+@model HospitalManagement.Models.NhanVienModel
+
+<h4>Cập nhật thông tin</h4>
+<hr />
+<div>
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { @class = "d-flex flex-wrap", name = "frm", id = "frm", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="col-sm-9">
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group col-4" style="display:none">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Hinh, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Hinh, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.Email, "Email nhân viên", htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-12">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.HoTen, "Họ tên", htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-12">
+                        @Html.EditorFor(model => model.HoTen, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.HoTen, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.SDTNV, "Số điện thoại", htmlAttributes: new { @class = "control-label col-12" })
+                    <div class="col-12">
+                        @Html.EditorFor(model => model.SDTNV, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SDTNV, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.ChucVu, "Chức vụ", htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-12">
+                        <select asp-for="ChucVu" class="form-select">
+                            <option value="0" selected>Chọn chức vụ</option>
+                            <option value="1">Nhân viên</option>
+                            <option value="2">Bác sĩ</option>
+                            <option value="3">Dược sĩ</option>
+                        </select>
+                        @Html.ValidationMessageFor(model => model.ChucVu, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.ChuyenKhoa, "Chuyên khoa", htmlAttributes: new { @class = "control-label col-12" })
+                    <div class="col-12">
+                        @Html.DropDownList("ChuyenKhoa", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ChuyenKhoa, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group form-check col-md-12">
+                    <label class="form-label">Trạng thái</label>
+                    <div>
+                        <label class="form-check-label">
+                            @Html.CheckBoxFor(model => model.TrangThai) Đang hoạt động
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Phần hình-->
+        <div class="col-sm-3">
+            <div class="form-group col-12">
+                <div class="col-md-10">
+                    @Html.ValidationMessageFor(model => model.Hinh, "", new { @class = "text-danger" })
+                    <label class="btn btn-success">
+                        <i class="fa fa-image"></i>  Chọn hình<input style="display:none;" class="form-control" type="file" id="upload-back" accept="image/*" />
+                    </label>
+                    <div id="image-holder2" class="pt-2">
+                        <img src="~/images/NguoiDung/@Model.Hinh" style='width: 100%'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+    $('#upload-back').change(function (e) {
+        var self = this;
+        var file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            var img = "<img src='" + reader.result + "' style='width: 100%'/>"
+            $('#image-holder2').html(img);
+        };
+        reader.readAsDataURL(file);
+    });
+</script>
+
+

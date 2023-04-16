@@ -1,0 +1,86 @@
+﻿
+@{
+    Layout = "~/Views/Shared/LayoutAdmin/LayoutAdmin.cshtml";
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style>
+        .canvasjs-chart-credit {
+            display: none;
+        }
+    </style>
+
+
+</head>
+<body>
+    <input id="ngayBatDau" data-format="dd/MM/yyyy hh:mm:ss" type="date" />
+    <input id="ngayKetThuc" data-format="dd/MM/yyyy hh:mm:ss" type="date" />
+
+    <input type="button" onclick="ReportDichVu()" value="Show">
+    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Năm</th>
+                <th scope="col">Tháng</th>
+                <th scope="col">Tổng tiền</th>
+            </tr>
+        </thead>
+        <tbody id="ShowReport">
+
+        </tbody>
+    </table>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+</body>
+</html>
+
+<script>
+    function ReportDichVu() {
+        $.ajax({
+            url: "/Report/ThongKeDichVuAction/",
+            type: 'GET',
+            data: {
+                ngayBatDau: $('#ngayBatDau').val(),
+                ngayKetThuc: $('#ngayKetThuc').val()
+            },
+
+            success: function (response) {
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    theme: "light2", 
+                    exportEnabled: true,
+                    title: {
+                        text: "Thống kê doanh thu dịch vụ theo tháng"
+                    },
+                    data: [{
+                        type: "column",
+                        dataPoints: response.dataPoints
+                    }]
+                });
+                chart.render();
+
+
+                $("#ShowReport").html("");
+                (response.dataTable.obj).forEach(function (item) {
+                    $("#ShowReport").append(`
+                        <tr>
+                            <td>${item.nam}</td>
+                            <td>${item.thang}</td>
+                            <td>${item.tongTien}</td>
+                        </tr>
+                    `)
+                        ;
+
+                });
+
+                console.log(response.dataTable.obj);
+
+            }
+
+        });
+    }
+</script>

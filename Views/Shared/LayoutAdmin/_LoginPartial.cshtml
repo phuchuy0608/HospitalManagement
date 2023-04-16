@@ -1,0 +1,25 @@
+﻿@using HospitalManagement.Models
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Extensions
+@using HospitalManagement.Constant
+
+@{ string userName = Context.Session.GetString(SessionKey.Nguoidung.UserName);}
+@{ string fullName = Context.Session.GetString(SessionKey.Nguoidung.FullName);}
+@{ string hinhAnh = Context.Session.GetString(SessionKey.Nguoidung.HinhAnh);}
+
+
+@if (userName != null && userName != "")
+{
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+            <img src="~/images/NguoiDung/@hinhAnh" class="img-circle elevation-2" style="width: 50px; height: 50px; object-fit: cover; object-position: center center; border-radius: 50%;" alt="User Image">
+        </div>
+        <div class="info">
+            <a href="#" class="d-block">@fullName</a>
+        </div>
+    </div>
+}
+
+
+

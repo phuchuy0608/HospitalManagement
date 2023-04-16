@@ -1,0 +1,365 @@
+﻿@using HospitalManagement.Models
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Extensions
+@using HospitalManagement.Constant
+
+@{ string userName = Context.Session.GetString(SessionKey.Nguoidung.UserName);}
+@{ string fullName = Context.Session.GetString(SessionKey.Nguoidung.FullName);}
+@{ string sdt = Context.Session.GetString(SessionKey.Nguoidung.SDT);}
+@{ string hinhAnh = Context.Session.GetString(SessionKey.Nguoidung.HinhAnh);}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"]</title>
+    <style>
+
+        .modal-fullscreen {
+            width: 100vw !important;
+            max-width: none !important;
+            height: 100% !important;
+            margin: 0 !important;
+            overflow: scroll;
+        }
+
+        .btn-img {
+            width: 150px;
+            margin-left: -1%;
+            background-color: red;
+            color: white;
+            border: 2px solid rgb(82, 183, 136);
+            transition: 0.25s all;
+            padding: 10px 0 10px 0;
+        }
+
+            .btn-img:hover {
+                /*background-color: white;*/
+                border: 2px solid rgb(82, 183, 136);
+                color: rgb(82, 183, 136);
+            }
+
+        .profile-edit-img {
+            width: 30vmin;
+            height: 30vmin;
+            object-fit: cover;
+            object-position: center center;
+        }
+
+        .nav-User:hover{
+            transform: scale(1.05);
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="~/AminLTE/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="~/font-awesome-4.7/font-awesome-4.7/css/font-awesome.min.css">
+
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">*@
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/AminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/AminLTE/dist/css/adminlte.min.css">
+    <!-- Sweet Alert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+
+        <!-- Preloader -->
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="~/AminLTE/dist/img/logoa.png" alt="AdminLTELogo" height="120" width="120">
+        </div>
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button" style="text-align:right;" title="Phóng to">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-User" onclick="OpenChangeInfo()" role="button" style="text-align:right;" title="Thông tin">
+                        <i class="fas fa-info"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-User" onclick="OpenChangePass()" role="button" style="text-align:right;" title="Đổi mật khẩu">
+                        <i class="fas fa-user-cog"></i>
+                    </a>
+                </li>
+                <li class="nav-item nav-User">
+                    <form asp-area="" asp-controller="Admin" asp-action="Logout" method="post" id="logoutForm">
+                        <button title="Đăng xuất" id="logout" type="submit" class="nav-link btn btn-link text-secondary"><i class="fas fa-sign-out-alt"></i></button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <partial name="~/Views/Shared/LayoutAdmin/_sidebarView.cshtml" />
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Main content -->
+            <section class="content" style="padding:5px;">
+                @RenderBody()
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2021 <a href="https://adminlte.io">PhucHuy</a>.</strong>
+            All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> 3.1.0
+            </div>
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+
+
+
+    <!--Phần Modal Change Info - ChangPassword-->
+
+    <!--Start ChangePassword-->
+    <div id="modal-user-changepass" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header m-auto">
+                    <h2 class="modal-title"><i class="fa fa-pencil"></i> <strong>Đổi mật khẩu</strong></h2>
+                </div>
+                <!-- END Modal Header -->
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div id="myModalContent_ChangePass">
+
+                    </div>
+
+                </div>
+                <!-- END Modal Body -->
+            </div>
+        </div>
+    </div>
+    <!--End ChangePassword-->
+
+    <!--Start ChangeInfo-->
+    <div id="modal_user_changeinfo" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header m-auto">
+                    <h2 class="modal-title"><i class="fa fa-pencil"></i> <strong>Cập nhật thông tin</strong></h2>
+                </div>
+                <!-- END Modal Header -->
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div id="myModalContent_ChangeInfo">
+
+                    </div>
+                </div>
+                <!-- END Modal Body -->
+            </div>
+        </div>
+    </div>
+    <!--End ChangePassword-->
+
+    <!--Kết thúc Modal Change Info - ChangPassword-->
+
+    <script>
+
+        //Hàm open modal ChangeInfo
+        function OpenChangeInfo() {
+            $('#contentChangeInfo').html("");
+
+            $.ajax({
+                url: '/Admin/ChangeInfo/',
+                type: "Get",
+                timeout: 20000,
+                async: true,
+                success: function (result) {
+                    
+                    $('#myModalContent_ChangeInfo').html(result);
+                    $('#modal_user_changeinfo').modal('show');
+
+
+                    $('#preloader-wrapper').toggleClass('hide');
+                },
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        }
+
+        //Hàm open modal ChangePass
+        function OpenChangePass() {
+            $('#myModalContent_ChangePass').html("");
+
+            $.ajax({
+                url: '/Admin/ChangePassword/',
+                type: "Get",
+                timeout: 20000,
+                async: true,
+                success: function (result) {
+                    
+                    $('#myModalContent_ChangePass').html(result);
+                    $('#modal-user-changepass').modal('show');
+
+
+                    $('#preloader-wrapper').toggleClass('hide');
+                },
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        }
+
+        //Hàm edit info Admin
+        function EditInfo() {
+            if ($("#frm1").valid()) {
+                var formData = new FormData();
+                var fileUpload = $("#upload-back").get(0);
+                var file = fileUpload.files[0];
+
+                formData.append("file", file);
+                formData.append('UpdateEmail', $("#UpdateEmail").val());
+                formData.append('UpdateHoTen', $("#UpdateHoTen").val());
+                formData.append('UpdateSDT', $("#UpdateSDT").val());
+                formData.append('UpdateHinhAnh', $("#Edit_Hinh").val());
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/ChangeInfo",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (result) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                        if (result.status != null) {
+                            if (result.status >= 1) {
+
+                                toastr.success(result.text);
+                                window.location.href = result.redirectUrL;
+                            }
+                            else {
+                                toastr.warning(result.text);
+                            }
+                        }
+                        else {
+                            $myModalContent.html(result);
+                        }
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    },
+                    failure: function (message) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                    }
+                });
+            }
+        }
+
+        //Hàm ChangePass
+        function ChangePass() {
+            if ($("#frm2").valid()) {
+                var formData = new FormData();
+
+                formData.append('Email', $("#Edit_Email").val());
+                formData.append('CurrentPassword', $("#Edit_PassOld").val());
+                formData.append('NewPassword', $("#Edit_Passnew").val());
+                formData.append('ConfirmPassword', $("#Edit_Passnew2").val());
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/ChangePassword",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (result) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                        if (result.status != null) {
+                            if (result.status >= 1) {
+
+                                toastr.success(result.text);
+                                window.location.href = result.redirectUrL;
+                            }
+                            else {
+                                toastr.warning(result.text);
+                            }
+                        }
+                        else {
+                            $('#myModalContent_ChangePass').html(result);
+                        }
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    },
+                    failure: function (message) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                    }
+                });
+            }
+        }
+    </script>
+    <!--Kết thúc Modal Change Info - ChangPassword-->
+    <!-- ./wrapper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="~/js/site.js"></script>
+
+    <!-- overlayScrollbars -->
+    <script src="~/AminLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/AminLTE/dist/js/adminlte.js"></script>
+
+    <!-- PAGE PLUGINS -->
+    <!-- jQuery Mapael -->
+    <script src="~/AminLTE/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+    <script src="~/AminLTE/plugins/raphael/raphael.min.js"></script>
+    <script src="~/AminLTE/plugins/jquery-mapael/jquery.mapael.min.js"></script>
+    <script src="~/AminLTE/plugins/jquery-mapael/maps/usa_states.min.js"></script>
+    <!-- ChartJS -->
+    <script src="~/AminLTE/plugins/chart.js/Chart.min.js"></script>
+
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/AminLTE/dist/js/demo.js"></script>
+
+
+    <link rel="stylesheet" href="~/css/PagedList.css" />
+    <link rel="stylesheet" href="~/css/toastr.css" />
+    <script src="~/js/toastr.js"></script>
+
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="~/js/jquery.inputmask.bundle.js"></script>
+    <script src="~/js/formToObject.js"></script>
+    <script src="~/js/jQuery.print.js"></script>
+    <script src="~/js/datatableExt.js"></script>
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

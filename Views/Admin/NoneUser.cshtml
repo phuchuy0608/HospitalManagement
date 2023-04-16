@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Tài khoản không hoạt động";
+    Layout = null;
+}
+
+<meta charset="utf-8">
+<title>@ViewData["Title"]</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+
+<!-- Icons -->
+<!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+<!-- END Icons -->
+<!-- Stylesheets -->
+<!-- Bootstrap is included in its original form, unaltered -->
+<link rel="stylesheet" href="~/MainElement/css/bootstrap.min.css">
+<link rel="stylesheet" href="~/css/toastr.css">
+
+
+
+<!-- Related styles of various icon packs and plugins -->
+<link rel="stylesheet" href="~/MainElement/css/plugins.css">
+
+<!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
+<link rel="stylesheet" href="~/MainElement/css/main.css">
+
+<!-- Include a specific file here from css/themes/ folder to alter the default theme of the template -->
+<!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
+<link rel="stylesheet" href="~/MainElement/css/themes.css">
+<!-- END Stylesheets -->
+<!-- Modernizr (browser feature detection library) -->
+<script src="~/MainElement/js/vendor/modernizr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    .ltn__404-area {
+        background-color: rgb(95,174,129);
+        height: 100%;
+    }
+</style>
+
+
+
+
+<!-- 404 area start -->
+<div class="ltn__404-area ltn__404-area-1 mb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="error-404-inner text-center text-light">
+                    <div class="error-img mb-3">
+                        <img src="~/GuestElement/img/NoneUser.png" width="700">
+                    </div>
+                    <h1 class="error-404-title d-none">
+                        HTTP 403 Forbidden
+                    </h1>
+                    <h2>@ViewData["Title"]</h2>
+                    <!-- <h3>Oops! Looks like something going rong</h3> -->
+                    <p style="font-size:20px">Bạn không có quyền truy cập vào trang này, vui lòng đăng nhập và thử lại sau !</p>
+                    <div class="btn-wrapper">
+                        <a href="@Url.ActionLink("Login","Admin")" class="btn btn-transparent"><i class="fas fa-long-arrow-alt-left"></i> Quay trở lại</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 404 area end -->
+
+<script src="~/MainElement/js/vendor/jquery.min.js"></script>
+<script src="~/MainElement/js/vendor/bootstrap.min.js"></script>
+<script src="~/MainElement/js/plugins.js"></script>
+<script src="~/MainElement/js/app.js"></script>
+
+<!-- Load and execute javascript code used only in this page -->
+<script src="~/MainElement/js/pages/login.js"></script>
+<script>$(function () { Login.init(); });</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

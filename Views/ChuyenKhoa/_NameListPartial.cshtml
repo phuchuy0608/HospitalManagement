@@ -1,0 +1,94 @@
+@model IPagedList<ChuyenKhoa>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common
+
+<style>
+    .list-table {
+        min-height: 400px
+    }
+
+    list-table table {
+        border: 1px solid gray;
+    }
+
+    #thead {
+        background-color: rgb(82, 183, 136);
+        color: white;
+    }
+
+    .table-btn a:hover {
+        transform: scale(1.075)
+    }
+
+    .btn-status {
+        background-color: rgb(17, 138, 178);
+        width: 30px;
+    }
+
+    .table-btn a i {
+        color: white;
+    }
+
+    .listname-img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        object-position: center center;
+    }
+</style>
+
+<div id="list">
+    <div class="list-table" style="min-height:400px">
+        <table class="table table-bordered text-left w-100 " style="font-size:small">
+                <tr id="thead">
+                    <th class="col-7">
+                        Tên chuyên khoa
+                    </th>
+                    <th class="col-5 text-center">Thao tác</th>
+                </tr>
+                @foreach (var item in ViewBag.Names as IEnumerable<ChuyenKhoa>)
+                {
+                    <tr>
+                        <td class="col-7">@item.TenCK</td>
+                        <td class="table-btn col-5 text-center text-nowrap">
+                            <a class="btn btn-status btn-sm active" onclick="Edit('@item.MaCK')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> @*| <a class="btn btn-danger btn-sm active" onclick="_delete('@item.MaCK')"> <i class="fa fa-trash"></i></a> | <a class="btn btn-dark btn-sm active" onclick="_Detail('@item.MaCK')" title="Thông tin"> <i class="fa fa-info-circle" aria-hidden="true"></i></a>*@
+                        </td>
+                    </tr>
+                }
+        </table>
+    </div>
+
+    <div class="text-right">
+
+        @{
+            var pageRender = new PagedListRenderOptions
+            {
+                MaximumPageNumbersToDisplay = 5,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+                DisplayLinkToLastPage = PagedListDisplayMode.Never,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                DisplayPageCountAndCurrentLocation = false,
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new string[] { "page-item" },
+                PageClasses = new string[] { "page-link" },
+
+
+                ContainerDivClasses = new[] { "pagination-container" }
+
+
+            };
+        }
+        @{
+            var searchModel = ViewBag.Data as ChuyenKhoaSearchModel;
+        }
+        @Html.PagedListPager((IPagedList<ChuyenKhoa>)ViewBag.Names, page => Url.Action("PageList", new { page, TenCKSearch = searchModel.TenCKSearch }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(pageRender, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "nameListContainer" }))
+    </div>
+</div>
+
+
+
+
+
+

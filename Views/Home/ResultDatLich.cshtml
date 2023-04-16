@@ -1,0 +1,161 @@
+﻿@model PhieuDatLich
+@{
+    ViewData["Title"] = "THÔNG TIN ĐẶT LỊCH KHÁM";
+    Layout = null;
+}
+
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>THÔNG TIN ĐẶT LỊCH KHÁM</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Place favicon.png in the root directory -->
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
+    <!-- Font Icons css -->
+    <link rel="stylesheet" href="~/GuestElement/css/font-icons.css">
+    <!-- plugins css -->
+    <link rel="stylesheet" href="~/GuestElement/css/plugins.css">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="~/GuestElement/css/style.css">
+    <!-- Responsive css -->
+    <link rel="stylesheet" href="~/GuestElement/css/responsive.css">
+</head>
+
+<body style="background-color: black" >
+    <!--[if lte IE 9]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
+    <!-- Add your site or application content here -->
+    <!-- Body main wrapper start -->
+    <div class="body-wrapper" style="background-color: black">
+
+        <!-- 404 area start -->
+        <div class="ltn__coming-soon-area section-bg-2 text-color-white " data-bs-bg="img/bg/15.jpg" style="background-color: black">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="coming-soon-inner">
+                            <div class="section-title-area ltn__section-title-2">
+                                <h4 class="section-subtitle ltn__secondary-color">Hello, @Model.TenBN</h4>
+                                <h1 class="section-title white-color" style="font-size:50px">Bạn đã đặt lịch thành công</h1>
+                                <h2 class="section-title white-color" style="font-size:50px">Mã đặt lịch <span style="color: yellow;">@Model.MaPhieu</span><br> Vui lòng lưu mã để tiện theo dõi</h2>
+                                @*<div id="qrcode" style="width:135px; margin:0 auto; background-color:white; border:3px solid white" ></div>*@
+                                <canvas id="qrcode" class="mt-4"></canvas>
+                                <div class="mt-4"><a class="btn theme-btn-1 btn-effect-1" onclick="downloadQR()">Tải QRCode</a></div>
+                                <br />
+                                <h5 class="ltn__secondary-color">Thời gian đến ngày khám</h5>
+                            </div>
+                            <div class="ltn__countdown mb-20" data-countdown="@Model.NgayKham?.ToString("yyyy/MM/dd hh:mm:ss")"></div>
+
+                            <div class="ltn__newsletter-inner mt-50">
+                                <h3>Thông tin của bạn</h3>
+                                <form action="#" class="ltn__form-box">
+                                    <input type="text" name="hoten" placeholder="Họ và tên: @Model.TenBN" disabled>
+                                    <input type="text" name="tel" placeholder="Ngày sinh: @Model.NgaySinh?.ToString("dd/MM/yyyy")" disabled>
+                                    <input type="text" name="tel" placeholder="Số điện thoại: @Model.SDT" disabled>
+                                    @if (Model.Email != null)
+                                    {
+                                        <input type="text" name="email" placeholder="Email: @Model.Email" disabled>
+                                    }
+                                    <input type="text" name="ngaykham" placeholder="Ngày khám : @Model.NgayKham" disabled>
+
+                                </form>
+                            </div>
+                            <div class="btn-wrapper mt-50">
+                                <a href="/Home/GioiThieu" class="btn theme-btn-2 btn-effect-2 text-uppercase">Liên hệ ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 404 area end -->
+
+    </div>
+    <!-- Body main wrapper end -->
+    <!-- All JS Plugins -->
+    <script src="~/GuestElement/js/plugins.js"></script>
+    <!-- Main JS -->
+    <script src="~/GuestElement/js/main.js"></script>
+
+    <!--QRCODE-->
+    <script src="~/js/qrious.js"></script>
+    <script>
+        (function () {
+            var $background = document.querySelector('main form [name="background"]');
+            var $backgroundAlpha = document.querySelector('main form [name="backgroundAlpha"]');
+            var $foreground = document.querySelector('main form [name="foreground"]');
+            var $foregroundAlpha = document.querySelector('main form [name="foregroundAlpha"]');
+            var $level = document.querySelector('main form [name="level"]');
+            var $section = document.querySelector('main section');
+            var $padding = document.querySelector('main form [name="padding"]');
+            var $size = document.querySelector('main form [name="size"]');
+            var $value = document.querySelector('main form [name="value"]');
+
+            var qr = window.qr = new QRious({
+                element: document.getElementById('qrcode'),
+                size: 250,
+                value: '@Model.MaPhieu'
+            });
+
+            $background.addEventListener('change', function () {
+                qr.background = $background.value || null;
+            });
+
+            $backgroundAlpha.addEventListener('change', function () {
+                qr.backgroundAlpha = $backgroundAlpha.value || null;
+            });
+
+            $foreground.addEventListener('change', function () {
+                qr.foreground = $foreground.value || null;
+            });
+
+            $foregroundAlpha.addEventListener('change', function () {
+                qr.foregroundAlpha = $foregroundAlpha.value || null;
+            });
+
+            $level.addEventListener('change', function () {
+                qr.level = $level.value;
+            });
+
+            $padding.addEventListener('change', function () {
+                if ($padding.validity.valid) {
+                    qr.padding = $padding.value !== '' ? $padding.value : null;
+                }
+            });
+
+            $size.addEventListener('change', function () {
+                if (!$size.validity.valid) {
+                    return;
+                }
+
+                qr.size = $size.value || null;
+
+                $section.style.minWidth = qr.size + 'px';
+            });
+
+            $value.value = 'QRious';
+            $value.addEventListener('input', function () {
+                qr.value = $value.value;
+            });
+        })();
+
+        function downloadQR() {
+            var link = document.createElement('a');
+            link.download = 'qrcode.png';
+            link.href = document.getElementById('qrcode').toDataURL()
+            link.click();
+        }
+    </script>
+
+</body>
+</html>
+
+
+

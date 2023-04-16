@@ -1,0 +1,115 @@
+﻿@model IPagedList<Benh>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common
+
+<style>
+    .list-table {
+        min-height: 400px
+    }
+
+    list-table table {
+        border: 1px solid gray;
+    }
+
+    #thead {
+        background-color: rgb(82, 183, 136);
+        color: white;
+    }
+
+    .table-btn a:hover {
+        transform: scale(1.075)
+    }
+
+    .btn-edit {
+        background-color: rgb(17, 138, 178);
+    }
+
+    .btn-delete {
+        background-color: rgb(17, 138, 178);
+    }
+
+    .btn-infomation {
+        background-color: rgb(17, 138, 178);
+    }
+
+    .table-btn a i {
+        color: white;
+    }
+
+    .table-infomation p {
+        width: 500px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<div id="list">
+    <div class="list-table" style="min-height:400px">
+        <table class="table table-bordered text-left w-100 " style="font-size:small">
+            <tr id="thead">
+
+                <th class="col-3">
+                    Tên bệnh
+                </th>
+
+                <th class="col-5">
+                    Thông tin
+                </th>
+
+                <th class="col-2">
+                    Chuyên khoa
+                </th>
+
+                <th class="col-2 text-center">Thao tác</th>
+            </tr>
+            @foreach (var item in ViewBag.Names as IEnumerable<Benh>)
+            {
+                <tr>
+                    <td class="col-3">@item.TenBenh</td>
+                    <td class="table-infomation col-5"><p>@item.ThongTin</p></td>
+                    <td class="col-2">@item.MaCKNavigation.TenCK</td>
+                    <td class="table-btn text-nowrap col-2 text-center">
+                        <a class="btn btn-edit btn-sm active" onclick="Edit('@item.MaBenh')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> @*| <a class="btn btn-danger btn-sm active" onclick="_delete('@item.MaBenh')"> <i class="fa fa-trash"></i></a> |*@
+                        <a class="btn btn-infomation btn-sm active" onclick="_Detail('@item.MaBenh')" title="Thông tin"> <i class="fa fa-info-circle" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+            }
+        </table>
+
+        <div class="text-right">
+
+            @{
+                var pageRender = new PagedListRenderOptions
+            {
+                MaximumPageNumbersToDisplay = 5,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+                DisplayLinkToLastPage = PagedListDisplayMode.Never,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                DisplayPageCountAndCurrentLocation = false,
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new string[] { "page-item" },
+                PageClasses = new string[] { "page-link" },
+
+                ContainerDivClasses = new[] { "pagination-container" }
+
+
+            };
+            }
+            @{
+                var searchModel = ViewBag.Data as BenhSearchModel;
+            }
+
+
+            @Html.PagedListPager((IPagedList<Benh>)ViewBag.Names, page => Url.Action("PageList", new { page, KeyWord = searchModel.KeyWord }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(pageRender, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "nameListContainer" }))
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

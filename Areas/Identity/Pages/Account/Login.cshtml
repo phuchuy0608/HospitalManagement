@@ -1,0 +1,173 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = null;
+}
+
+<meta charset="utf-8">
+<title>NHÂN VIÊN - ĐĂNG NHẬP</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+
+<!-- Icons -->
+<!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+<!-- END Icons -->
+<!-- Stylesheets -->
+<!-- Bootstrap is included in its original form, unaltered -->
+<link rel="stylesheet" href="~/MainElement/css/bootstrap.min.css">
+<link rel="stylesheet" href="~/css/toastr.css">
+
+
+
+
+<!-- Related styles of various icon packs and pluginsgg -->
+@*<link rel="stylesheet" href="~/MainElement/css/plugins.css">*@
+
+<!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
+<link rel="stylesheet" href="~/MainElement/css/main.css">
+
+<!-- Include a specific file here from css/themes/ folder to alter the default theme of the template -->
+<!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
+<link rel="stylesheet" href="~/MainElement/css/themes.css">
+<!-- END Stylesheets -->
+<!-- Modernizr (browser feature detection library) -->
+<script src="~/MainElement/js/vendor/modernizr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    #login-container .login-title {
+        padding: 20px 10px;
+        background: #444444;
+        /* background: rgba(0, 0, 0, 0.836); */
+        background: lightskyblue;
+    }
+    .btn-login {
+        padding: 11px 20px;
+        border: 2px solid lightskyblue;
+        width: 250px;
+        background-color: lightskyblue;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        transition: 0.25s all;
+    }
+        .btn-login:hover {
+            background-color: white;
+            color: lightskyblue;
+        }
+        .btn-google {
+            background-color: white;
+            padding: 10px 20px;
+            margin-top: -5px;
+            border: 1px solid gray;
+            width: 250px;
+            color: black;
+        }
+</style>
+
+
+<div class="row">
+    <img src="~/MainElement/img/Background.png" alt="Login Full Background" class="full-bg animation-pulseSlow">
+
+    <!-- Login Container -->
+    <div id="login-container" class="animation-fadeIn" style="margin-top: -5%;">
+        <!-- Login Title -->
+        <div class="login-title text-center">
+            <h1><strong>Mã Phúc Huy Hospital</strong><br></h1>
+            <!-- <h1><strong>TES MEDICAL</strong><br><small>Please <strong>Login</strong> or <strong>Register</strong></small></h1> -->
+        </div>
+        <!-- END Login Title -->
+        <!-- Login Block -->
+        <div class="block push-bit" style="height: 330px;">
+            <!-- Login Form -->
+            <form id="account" method="post" class="form-horizontal form-control-borderless m-auto">
+                @*<div asp-validation-summary="All" class="text-danger"></div>*@
+                
+                
+                <div class="form-group">
+                    <div class="col-xs-12" style="height: 50px;">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color:deepskyblue;">
+                                <i class="fad fa-envelope-open-text"></i>
+                            </span>
+                            <input asp-for="Input.Email" class="form-control input-lg" placeholder="Email">
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger" style="margin-left: 52px;"></span>
+                        @*<span  class="text-danger">KKkkkkkkk</span>*@
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <div class="col-xs-12" style="height: 50px;">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color: lightskyblue;">
+                                <i class="fad fa-lock-alt"></i>
+                            </span>
+                            <input asp-for="Input.Password" class="form-control input-lg" placeholder="Mật khẩu">
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger" style="margin-left: 52px;"></span>
+                        <span class="text-danger">
+                            @(string.IsNullOrWhiteSpace(Model.Error)?"":Model.Error)
+                        </span>
+                        @*<span  class="text-danger">kkkkkkkk</span>*@
+                    </div>
+                </div>
+                <div class="form-group form-actions" style="display: flex; margin-inline: 5px; margin-bottom: 7%;">
+                    <div style="width: 60%; margin-top: 10px;">
+                        <label data-toggle="tooltip" title="Remember Me?">
+                            <input type="checkbox" asp-for="Input.RememberMe">
+                            <span style="font-weight: 400; color: lightskyblue; "> Ghi nhớ đăng nhập</span>
+                        </label>
+                    </div>
+                    <div 
+                         @*class="col-xs-5 text-right"*@
+                         style="width: 40%; text-align: right; margin-top: 13px;" >
+                        <a id="link-reminder-login" style="color: lightskyblue; font-weight: 400;" href="@Url.Action("ForgotPassword","Identity")">Quên mật khẩu ?</a>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12 text-center">
+                        <button class="btn-login" type="submit">Đăng nhập</button>
+                    </div>
+
+                </div>
+            </form>
+            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-signin" >
+                
+
+                    <div class="form-google ">
+                        <div class="col-xs-12 text-center">
+                            <button type="submit" class="btn-google" name="provider" value="Google" title="Dùng tài khoản Google đăng nhập">
+                                <img style="margin-right: 5%;" src="~/MainElement/img/google.jpg" width="20px;" alt="">  Đăng nhập với Google
+                            </button>
+                        </div>                        
+                    </div>
+                  
+                
+            </form>
+            <!-- END Login Form -->
+
+
+
+        </div>
+        <!-- END Login Block -->
+    </div>
+
+
+</div>
+
+
+
+<script src="~/MainElement/js/vendor/jquery.min.js"></script>
+<script src="~/MainElement/js/vendor/bootstrap.min.js"></script>
+<script src="~/MainElement/js/plugins.js"></script>
+<script src="~/MainElement/js/app.js"></script>
+
+<!-- Load and execute javascript code used only in this page -->
+<script src="~/MainElement/js/pages/login.js"></script>
+<script>$(function () { Login.init(); });</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

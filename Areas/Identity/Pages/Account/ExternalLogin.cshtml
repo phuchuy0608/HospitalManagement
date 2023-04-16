@@ -1,0 +1,129 @@
+﻿@page
+@using HospitalManagement.Identity.Pages.Account
+@model ExternalLoginModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+
+<meta charset="utf-8">
+<title>NHÂN VIÊN - ĐĂNG NHẬP</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+
+<!-- Icons -->
+<!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+<!-- END Icons -->
+<!-- Stylesheets -->
+<!-- Bootstrap is included in its original form, unaltered -->
+<link rel="stylesheet" href="~/MainElement/css/bootstrap.min.css">
+<link rel="stylesheet" href="~/css/toastr.css">
+
+
+
+<!-- Related styles of various icon packs and plugins -->
+<link rel="stylesheet" href="~/MainElement/css/plugins.css">
+
+<!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
+<link rel="stylesheet" href="~/MainElement/css/main.css">
+
+<!-- Include a specific file here from css/themes/ folder to alter the default theme of the template -->
+<!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
+<link rel="stylesheet" href="~/MainElement/css/themes.css">
+<!-- END Stylesheets -->
+<!-- Modernizr (browser feature detection library) -->
+<script src="~/MainElement/js/vendor/modernizr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    #login-container .login-title {
+        padding: 20px 10px;
+        background: #444444;
+        /* background: rgba(0, 0, 0, 0.836); */
+        background: rgb(54, 172, 105);
+    }
+</style>
+
+<h4 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h4>
+<hr />
+
+<p id="external-login-description" class="text-info">
+    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
+    Please enter an email address for this site below and click the Register button to finish
+    logging in.
+</p>
+
+<div class="row">
+    <img src="~/MainElement/img/Background.png" alt="Login Full Background" class="full-bg animation-pulseSlow">
+
+    <!-- Login Container -->
+    <div id="login-container" class="animation-fadeIn" style="margin-top: -5%;">
+        <!-- Login Title -->
+        <div class="login-title text-center">
+            <h1><strong>XÁC NHẬN LIÊN KẾT</strong><br></h1>
+            <!-- <h1><strong>TES MEDICAL</strong><br><small>Please <strong>Login</strong> or <strong>Register</strong></small></h1> -->
+        </div>
+        <!-- END Login Title -->
+        <!-- Login Block -->
+        <div class="block push-bit" style="height: 270px;">
+            <!-- Login Form -->
+            <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal form-control-borderless m-auto">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color: rgb(54, 172, 105);"><i class="fad fa-envelope-open-text"></i></span>
+                            <input asp-for="Input.Email" class="form-control input-lg" placeholder="Email" readonly>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color: rgb(54, 172, 105);"><i class="fad fa-lock-alt"></i></span>
+                            <input type="password" asp-for="Input.PassWord" class="form-control input-lg" placeholder="Nhập mật khẩu hệ thống để liên kết tài khoản.">
+                            <span asp-validation-for="Input.PassWord" class="text-danger"></span>
+                        </div>
+                        <spa class="text-danger" style="margin-left:50px;">
+                            @(string.IsNullOrWhiteSpace(Model.Error)?"":Model.Error)
+                        </spa>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12 text-center">
+                        <button type="submit" class="btn" style="width: 250px; background-color: rgb(54, 172, 105); color: white;">Xác nhận</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12 text-center">
+                        <button type="submit" class="btn" style="border: 1px solid gray; border-radius: 5px; width: 250px; color: black">Trở về</button>
+                    </div>
+
+                </div>
+            </form>
+            <!-- END Login Form -->
+
+
+
+        </div>
+        <!-- END Login Block -->
+    </div>
+
+
+</div>
+
+
+
+<script src="~/MainElement/js/vendor/jquery.min.js"></script>
+<script src="~/MainElement/js/vendor/bootstrap.min.js"></script>
+<script src="~/MainElement/js/plugins.js"></script>
+<script src="~/MainElement/js/app.js"></script>
+
+<!-- Load and execute javascript code used only in this page -->
+<script src="~/MainElement/js/pages/login.js"></script>
+<script>$(function () { Login.init(); });</script>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

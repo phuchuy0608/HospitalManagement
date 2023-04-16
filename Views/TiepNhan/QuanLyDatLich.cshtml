@@ -1,0 +1,227 @@
+﻿@using X.PagedList
+
+@{
+    ViewData["Title"] = "QUẢN LÝ ĐẶT LỊCH";
+    Layout = "~/Views/Shared/LayoutMain/MainLayout.cshtml";
+}
+
+
+
+
+
+<style>
+    .a {
+        text-decoration: none !important
+    }
+</style>
+
+<div class="block">
+    <div class="block-title">
+        <h2><strong>Quản lý đặt lịch</strong></h2>
+    </div>
+    <div class="mt-2 mb-4">
+
+        <div class="d-flex justify-content-between">
+            <div class="w-50">
+                <input class="mr-2 mb-2 form-control" id="TimKiem" placeholder="Nhập từ khóa cần tìm" />
+
+            </div>
+            <div class="button-reload ">
+                <button type="button" class="btn" style="color:white;" onclick="Clear()" id="btSeach"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;Làm mới</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="nameListContainer">
+        <partial name="_ListDatLich" model="@ViewBag.Names as IPagedList<PhieuDatLich>" />
+
+    </div>
+
+    <!--Model chính-->
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content" id="myModalContent">
+
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+   
+    <script src="~/js/datatableExt.js"></script>
+    <script type="text/javascript" src="~/js/datetime.js"></script>
+
+
+    <script>
+        var table;
+        var obj = {};
+        $(document).ready(
+            function () {
+                ReloadPage();
+            });
+        ////Hàm mở modal của Chi tiết đặt lịch
+        function Detail(_id) {
+            $.ajax({
+                url: "/TiepNhan/ChiTietDatLich/",
+                type: 'GET',
+                data: {
+                    id: _id
+                },
+                success: function (response) {
+                    $("#myModalContent").html(response);
+                    $('#myModal').modal('show');
+                    $('#btSave').show();
+                    $('#btupdate').hide();
+
+                }
+            });
+        }
+        //Mở modal edit đặt lịch
+        function Edit(_id) {
+            $.ajax({
+                url: "/TiepNhan/Edit/",
+                type: 'GET',
+                data: {
+                    id: _id
+                },
+                success: function (response) {
+                    $("#myModalContent").html(response);
+                    $('#myModal').modal('show');
+                    $('#btSave').show();
+                    $('#btupdate').hide();
+
+                }
+            });
+        }
+        var $id = "";
+        var $modal = $('#myModal');
+        var $myModalContent = $("#myModalContent");
+        var $modalins = $('#myModalins');
+        var $myModalContentins = $("#myModalContentins");
+        var $myModalTitle = $("#myModalTitle");
+        var $myModalTitleins = $("#myModalTitleins");
+
+        
+        $("#TimKiem").keyup(function () {           
+            obj = {};          
+                obj.KeyWordSearch = $(this).val()
+                obj.page = 1;
+                $.ajax({
+                    url: '/TiepNhan/ReloadPage/',
+                    type: "Get",
+                    data: obj,
+                    success: function (result) {
+                        $('#nameListContainer').html(result);
+                    },
+                    failure: function (message) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                    }
+                });
+        });
+        function ReloadPage(Page) {
+            obj = {};
+
+            obj.Page = Page;
+            $("#TimKiem").val("");
+            $.ajax({
+                url: '/TiepNhan/ReloadPage/',
+                type: "Get",
+                timeout: 20000,
+                async: false,
+                data: obj,
+                success: function (result) {
+                    $('#nameListContainer').html(result);
+                },
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        }
+
+        function Clear() {
+            ReloadPage(1);
+        }
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/signalServer")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+            } catch (err) {
+                console.log(err);
+                setTimeout(start, 5000);
+            }
+        };
+        connection.onclose(async () => {
+            await start();
+        });
+        // Start the connection.
+        start();
+        connection.on("ReceiveMessage", (Ten, NgaySinh, SDT, NgayKham, MaPhieu) => {
+            toastr.success("Có một lịch đặt mới");
+            obj = {};            
+            obj.page = $('#CurrentPage').val();
+            obj.KeyWordSearch = $('#TimKiem').val()           
+            $.ajax({
+                url: '/TiepNhan/ReloadPage/',
+                type: "Get",
+                data: obj,
+                success: function (result) {
+                    $('#nameListContainer').html(result);
+                },
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        });
+
+
+        function _delete(id) {
+            Swal.fire({
+                title: 'Bạn có muốn xóa phiếu đặt lịch này ?',
+                text: "Thao tác không thể thay đổi !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Huỷ bỏ',
+                confirmButtonText: 'Xác nhận'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/TiepNhan/DeletePhieuDatLich",
+                        data: { "MaPhieu": id },
+                        success: function (result) {
+                            $('#preloader-box').toggleClass('hide');
+                            if (result.status >= 1) {
+                                toastr.success(result.text);
+                                ReloadPage();
+                            }
+                            else {
+                                toastr.warning(result.text);
+                            }
+                        },
+                        error: function (errormessage) {
+                            toastr.warning(errormessage.responseText);
+                        },
+                        failure: function (message) {
+                            $('#preloader-box').toggleClass('hide');
+                        }
+                    });
+                }
+            })
+        }
+
+        
+        
+
+        
+    </script>
+}
+

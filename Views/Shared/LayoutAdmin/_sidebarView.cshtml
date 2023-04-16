@@ -1,0 +1,148 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Extensions
+@using HospitalManagement.Constant
+@using HospitalManagement.Helpers
+
+@{ string chucVu = Context.Session.GetString(SessionKey.Nguoidung.ChucVu);}
+
+
+<!-- Brand Logo -->
+<a class="brand-link">
+    <img src="~/AminLTE/dist/img/logoa.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+    <span class="brand-text font-weight-light">Admin Management</span>
+</a>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <partial name="~/Views/Shared/LayoutAdmin/_LoginPartial.cshtml" />
+
+    <!-- SidebarSearch Form -->
+    <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+                <button class="btn btn-sidebar">
+                    <i class="fas fa-search fa-fw"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <li class="nav-header">CHỨC NĂNG ADMIN</li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-chart-pie"></i>
+                    <p>
+                        Báo cáo & Thống kê
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item @Html.IsSelected(actions: "Index", controllers: "Report",cssClass:"menu-is-opening menu-open")" >
+                        <a href="@Url.Action("Index","Report")" class="nav-link @Html.IsSelected(actions: "Index", controllers: "Report")">
+                            <i class="fas fa-hand-holding-usd nav-icon"></i>
+                            <p>Doanh Thu</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("ReportBenh","Report")" class="nav-link @Html.IsSelected(actions: "ReportBenh", controllers: "Report")">
+                            <i class="fas fa-hospital-user nav-icon"></i>
+                            <p>Bệnh & Số lượng thuốc</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("ReportBenhNhan","Report")" class="nav-link @Html.IsSelected(actions: "ReportBenhNhan", controllers: "Report")">
+                            <i class="fas fa-hospital-user nav-icon"></i>
+                            <p>Bệnh nhân</p>
+                        </a>
+                    </li>                   
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-blog"></i>
+                    <p>
+                        Quản lý tin tức
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index","TinTuc")" class="nav-link @Html.IsSelected(actions: "Index", controllers: "TinTuc")">
+                            <i class="far fa-newspaper nav-icon"></i>
+                            <p>Bài viết</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index","TheLoai")" class="nav-link @Html.IsSelected(actions: "Index", controllers: "TheLoai")">
+                            <i class="fas fa-layer-group nav-icon"></i>
+                            <p>Thể loại</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @if (chucVu == "1")
+            {
+                <li class="nav-item">
+                    <a href="@Url.Action("Index","NguoiDung")" class="nav-link @Html.IsSelected(actions: "Index", controllers: "NguoiDung")">
+                        <i class="nav-icon fas fa-users-cog"></i>
+                        <p>
+                            Quản lý người dùng
+                        </p>
+                    </a>
+                </li>
+            }
+
+            <li class="nav-item">
+                <a href="@Url.Action("Index","NhanVienYTe")" class="nav-link @Html.IsSelected(actions: "Index", controllers: "NhanVienYTe")">
+                    <i class="nav-icon fas fa-user-md"></i>
+                    <p>
+                        Nhân viên y tế
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="@Url.Action("Index","Thuoc")" class="nav-link @Html.IsSelected(actions: "Index", controllers: "Thuoc")">
+                    <i class="nav-icon fas fa-pills"></i>
+                    <p>
+                        Thuốc
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="@Url.Action("Index","DichVu")" class="nav-link @Html.IsSelected(actions: "Index", controllers: "DichVu")">
+                    <i class="nav-icon fas fa-notes-medical"></i>
+                    <p>
+                        Dịch vụ
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="@Url.Action("Index","ChuyenKhoa")" class="nav-link @Html.IsSelected(actions: "Index", controllers: "ChuyenKhoa")">
+                    <i class="nav-icon fas fa-briefcase-medical"></i>
+                    <p>
+                        Chuyên khoa
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="@Url.Action("Index","Benh")" class="nav-link @Html.IsSelected(actions: "Index", controllers: "Benh")">
+                    <i class="nav-icon fas fa-book-medical"></i>
+                    <p>
+                        Thông tin bệnh
+                    </p>
+                </a>
+            </li>
+
+        </ul>
+</nav>
+    <!-- /.sidebar-menu -->
+</div>
+

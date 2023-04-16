@@ -1,0 +1,139 @@
+﻿@model List<TinTuc>
+@{
+    ViewData["Title"] = "PHÒNG KHÁM MÃ PHÚC HUY";
+    Layout = "~/Views/Shared/GuestLayout.cshtml";
+}
+
+<style>
+    h3.ltn__blog-title {
+        width: 340px;
+        height: 53px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    @@media only screen and (max-width: 600px) {
+        h3.ltn__blog-title {
+            width: 240px;
+            height: 30px;
+            font-size: 13px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+</style>
+
+<div class="ltn__about-us-area pt-25 pb-120 ">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 align-self-center">
+                <div class="about-us-img-wrap about-img-left">
+                    <img src="~/GuestElement/img/logoa1.png" alt="About Us Image">
+                </div>
+            </div>
+           @* <div class="col-lg-6 align-self-center">
+                <div class="about-us-info-wrap">
+                    <div class="section-title-area ltn__section-title-2--- mb-30">
+                        <h6 class="section-subtitle section-subtitle-2 ltn__secondary-color d-none">About Us</h6>
+                        <h1 class="section-title">Giới thiệu phần mềm</h1>
+                        <p>
+                            Loại bỏ việc quản lý không khoa học,
+                            tối ưu quản lý phòng khám bằng công nghệ 4.0 với phần mềm quản lý phòng khám chuyên nghiệp <strong>Tony Tony Chopper.</strong>
+                        </p>
+                    </div>
+                    <ul class="ltn__list-item-1 ltn__list-item-1-before--- clearfix">
+                        <li><i class="fas fa-check-square"></i> Kiểm soát toàn bộ trên một hệ thống duy nhất.</li>
+                        <li><i class="fas fa-check-square"></i> Quản lý hiệu quả, kiếm nhiều tiền hơn.</li>
+                        <li><i class="fas fa-check-square"></i> Thu hút nhiều khách hàng mới tìm đến phòng khám.</li>
+                    </ul>
+                    <div class="about-author-info-2 border-top mt-30 pt-20">
+                        <ul>
+                            <li>
+                                <div class="about-author-info-2-brief  d-flex">
+                                    <div class="author-img">
+                                        <img src="~/GuestElement/img/blog/phuchuy.jpg" alt="#">
+                                    </div>
+                                    <div class="author-name-designation">
+                                        <h4 class="mb-0">Phúc Huy</h4>
+                                        <small>Chuyên gia y tế</small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="about-author-info-2-contact  d-flex">
+                                    <div class="about-contact-icon d-flex align-self-center mr-10">
+                                        <i class="icon-call"></i>
+                                    </div>
+                                    <div class="about-author-info-2-contact-info">
+                                        <small>Đường dây nóng</small>
+                                        <h6 class="mb-0">0966-701-482</h6>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+@*@{
+    var GroupTinTuc = (ViewBag.TL1 as IEnumerable<TinTuc>).GroupBy(x => x.MaTLNavigation.TenTL);
+}*@
+<!-- TIN TỨC 1 START-->
+<div class="ltn__blog-area pt-115 pb-45">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title-area ltn__section-title-2--- text-center">
+                    <h6 class="section-subtitle section-subtitle-2 ltn__secondary-color d-none">News & Blogs</h6>
+                    <h1 class="section-title">TIN MỚI NHẤT</h1>
+                </div>
+            </div>
+        </div>
+       @* <partial name="_ListTheLoai" model="ViewBag.TL1" />*@
+    </div>
+</div>
+<!-- TIN TỨC 1 END -->
+
+
+
+@*@foreach (var theloai in GroupTinTuc)
+{*@
+
+    <div class="ltn__blog-area pt-115 pb-45">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title-area ltn__section-title-2--- text-center">
+                        <h6 class="section-subtitle section-subtitle-2 ltn__secondary-color d-none">News & Blogs</h6>
+                        @*<h1 class="section-title">@theloai.Key</h1>*@
+                    </div>
+                </div>
+            </div>
+           @* <partial name="_ListTheLoai" model="theloai.ToList()" />*@
+        </div>
+    </div>
+}
+<div class="ltn__call-to-action-area call-to-action-6 before-bg-bottom d-none" data-bs-bg="~/GuestElement/img/1.jpg--">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="call-to-action-inner call-to-action-inner-6 ltn__secondary-bg position-relative text-center---">
+                    <div class="coll-to-info text-color-white">
+                        <h1>Buy medical disposable face mask <br> to protect your loved ones</h1>
+                    </div>
+                    <div class="btn-wrapper">
+                        <a class="btn btn-effect-3 btn-white" href="shop.html">Explore Products <i class="icon-next"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CALL TO ACTION END -->
+<!-- FOOTER AREA START -->
+@section scripts{
+
+
+}

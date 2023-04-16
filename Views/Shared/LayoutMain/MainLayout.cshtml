@@ -1,0 +1,857 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using HospitalManagement.Models
+
+
+
+@inject SignInManager<NhanVienYte> SignInManager
+@inject UserManager<NhanVienYte> UserManager
+
+<!DOCTYPE html>
+<!--[if IE 9]>         <html class="no-js lt-ie10" lang="en"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+
+
+    <title>@ViewData["Title"]</title>
+
+    <meta name="description" content="ProUI is a Responsive Bootstrap Admin Template created by pixelcave and published on Themeforest.">
+    <meta name="author" content="pixelcave">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href="~/font-awesome-4.7/font-awesome-4.7/css/font-awesome.min.css">
+
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">*@
+    <link rel="stylesheet" href="~/css/jquery-ui.css" />
+    <!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
+    <link rel="stylesheet" href="~/MainElement/css/main.css">
+    <link rel="stylesheet" href="~/css/toastr.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <!-- Icons -->
+    <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+    <link rel="shortcut icon" href="~/MainElement/img/favicon.png">
+    <link rel="apple-touch-icon" href="~/MainElement/img/icon57.png" sizes="57x57">
+    <link rel="apple-touch-icon" href="~/MainElement/img/icon72.png" sizes="72x72">
+    <link rel="apple-touch-icon" href="~/MainElement/img/icon76.png" sizes="76x76">
+    <link rel="apple-touch-icon" href="~/MainElement/img/icon114.png" sizes="114x114">
+    <link rel="apple-touch-icon" href="~/MainElement/img/icon120.png" sizes="120x120">
+    <link rel="apple-touch-icon" href="~/MainElement/img/icon144.png" sizes="144x144">
+    <link rel="apple-touch-icon" href="~/MainElement/img/icon152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="~/MainElement/img/icon180.png" sizes="180x180">
+    <!-- END Icons -->
+    <!-- Stylesheets -->
+    <!-- Bootstrap is included in its original form, unaltered -->
+    @*<link rel="stylesheet" href="~/MainElement/css/bootstrap.min.css">*@
+    <link rel="stylesheet" href="~/css/toastr.css">
+
+
+
+    <!-- Related styles of various icon packs and plugins -->
+    @*<link rel="stylesheet" href="~/MainElement/css/plugins.css">*@
+
+    <!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
+    <link rel="stylesheet" href="~/MainElement/css/main.css">
+
+    <!-- Include a specific file here from css/themes/ folder to alter the default theme of the template -->
+    <!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
+    @if (string.IsNullOrWhiteSpace((await UserManager.GetUserAsync(User)).Theme))
+    {
+        <link rel="stylesheet" href="~/MainElement/css/themes/spring.css">
+    }
+    else
+    {
+        <link rel="stylesheet" href="@((await UserManager.GetUserAsync(User)).Theme)">
+    }
+    <link rel="stylesheet" href="~/MainElement/css/themes.css">
+
+
+    <!-- END Stylesheets -->
+    <!-- Modernizr (browser feature detection library) -->
+    <script src="~/MainElement/js/vendor/modernizr.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+    <style>
+        .active:hover {
+            background-color: #666;
+            color: white;
+        }
+
+        a {
+            text-decoration: none !important
+        }
+
+        .profile-edit-img {
+            width: 30vmin;
+            height: 30vmin;
+            object-fit: cover;
+            object-position: center center;
+        }
+
+        .header-text-title {
+            display: flex;
+        }
+
+        .header-text-left {
+            width: 60%;
+        }
+
+            .header-text-left h1 {
+                font-size: 5vmin;
+            }
+
+        .header-text-right {
+            width: 40%;
+            text-align: right;
+        }
+
+            .header-text-right h2 {
+                font-size: 5vmin;
+            }
+        @@media only screen and (min-width: 600px) {
+            #navBaricon{
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Wrapper -->
+    <!-- In the PHP version you can set the following options from inc/config file -->
+    <!--
+        Available classes:
+
+        'page-loading'      enables page preloader
+    -->
+    <div id="page-wrapper">
+        <!-- Preloader -->
+        <!-- Preloader functionality (initialized in js/app.js) - pageLoading() -->
+        <!-- Used only if page preloader is enabled from inc/config (PHP version) or the class 'page-loading' is added in #page-wrapper element (HTML version) -->
+        <div class="preloader themed-background">
+            <h1 class="push-top-bottom text-light text-center"><strong>Pro</strong>UI</h1>
+            <div class="inner">
+                <h3 class="text-light visible-lt-ie10"><strong>Loading..</strong></h3>
+                <div class="preloader-spinner hidden-lt-ie10"></div>
+            </div>
+        </div>
+        <!-- END Preloader -->
+
+        <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
+            <!-- Alternative Sidebar -->
+            <div id="sidebar-alt">
+                <!-- Wrapper for scrolling functionality -->
+                <div id="sidebar-alt-scroll">
+                    <!-- Sidebar Content -->
+                    <div class="sidebar-content">
+                        <!-- Chat -->
+                        <!-- Chat demo functionality initialized in js/app.js -> chatUi() -->
+                        <a href="page_ready_chat.html" class="sidebar-title">
+                            <i class="gi gi-comments pull-right"></i> <strong>Chat</strong>UI
+                        </a>
+                        <!-- Chat Users -->
+                        <ul class="chat-users clearfix">
+                            <li>
+                                <a href="javascript:void(0)" class="chat-user-online">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar12.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="chat-user-online">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar15.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="chat-user-online">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar10.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="chat-user-online">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar4.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="chat-user-away">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar7.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="chat-user-away">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar9.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="chat-user-busy">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar16.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar1.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar4.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar3.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar13.jpg" alt="avatar" class="~/MainElement/img-circle">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">
+                                    <span></span>
+                                    <img src="~/MainElement/img/placeholders/avatars/avatar5.jpg" alt="avatar" class="img-circle">
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- END Chat Users -->
+                        <!-- Chat Talk -->
+                        <div class="chat-talk display-none">
+                            <!-- Chat Info -->
+                            <div class="chat-talk-info sidebar-section">
+                                <button id="chat-talk-close-btn" class="btn btn-xs btn-default pull-right">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <img src="~/MainElement/img/placeholders/avatars/avatar5.jpg" alt="avatar" class="img-circle pull-left">
+                                <strong>John</strong> Doe
+                            </div>
+                            <!-- END Chat Info -->
+                            <!-- Chat Messages -->
+                            <ul class="chat-talk-messages">
+                                <li class="text-center"><small>Yesterday, 18:35</small></li>
+                                <li class="chat-talk-msg animation-slideRight">Hey admin?</li>
+                                <li class="chat-talk-msg animation-slideRight">How are you?</li>
+                                <li class="text-center"><small>Today, 7:10</small></li>
+                                <li class="chat-talk-msg chat-talk-msg-highlight themed-border animation-slideLeft">I'm fine, thanks!</li>
+                            </ul>
+                            <!-- END Chat Messages -->
+                            <!-- Chat Input -->
+                            <form action="index.html" method="post" id="sidebar-chat-form" class="chat-form">
+                                <input type="text" id="sidebar-chat-message" name="sidebar-chat-message" class="form-control form-control-borderless" placeholder="Type a message..">
+                            </form>
+                            <!-- END Chat Input -->
+                        </div>
+                        <!--  END Chat Talk -->
+                        <!-- END Chat -->
+                        <!-- Activity -->
+                        <a href="javascript:void(0)" class="sidebar-title">
+                            <i class="fa fa-globe pull-right"></i> <strong>Activity</strong>UI
+                        </a>
+                        <div class="sidebar-section">
+                            <div class="alert alert-danger alert-alt">
+                                <small>just now</small><br>
+                                <i class="fa fa-thumbs-up fa-fw"></i> Upgraded to Pro plan
+                            </div>
+                            <div class="alert alert-info alert-alt">
+                                <small>2 hours ago</small><br>
+                                <i class="gi gi-coins fa-fw"></i> You had a new sale!
+                            </div>
+                            <div class="alert alert-success alert-alt">
+                                <small>3 hours ago</small><br>
+                                <i class="fa fa-plus fa-fw"></i> <a href="page_ready_user_profile.html"><strong>John Doe</strong></a> would like to become friends!<br>
+                                <a href="javascript:void(0)" class="btn btn-xs btn-primary"><i class="fa fa-check"></i> Accept</a>
+                                <a href="javascript:void(0)" class="btn btn-xs btn-default"><i class="fa fa-times"></i> Ignore</a>
+                            </div>
+                            <div class="alert alert-warning alert-alt">
+                                <small>2 days ago</small><br>
+                                Running low on space<br><strong>18GB in use</strong> 2GB left<br>
+                                <a href="page_ready_pricing_tables.html" class="btn btn-xs btn-primary"><i class="fa fa-arrow-up"></i> Upgrade Plan</a>
+                            </div>
+                        </div>
+                        <!-- END Activity -->
+                        <!-- Messages -->
+                        <a href="page_ready_inbox.html" class="sidebar-title">
+                            <i class="fa fa-envelope pull-right"></i> <strong>Messages</strong>UI (5)
+                        </a>
+                        <div class="sidebar-section">
+                            <div class="alert alert-alt">
+                                Debra Stanley<small class="pull-right">just now</small><br>
+                                <a href="page_ready_inbox_message.html"><strong>New Follower</strong></a>
+                            </div>
+                            <div class="alert alert-alt">
+                                Sarah Cole<small class="pull-right">2 min ago</small><br>
+                                <a href="page_ready_inbox_message.html"><strong>Your subscription was updated</strong></a>
+                            </div>
+                            <div class="alert alert-alt">
+                                Bryan Porter<small class="pull-right">10 min ago</small><br>
+                                <a href="page_ready_inbox_message.html"><strong>A great opportunity</strong></a>
+                            </div>
+                            <div class="alert alert-alt">
+                                Jose Duncan<small class="pull-right">30 min ago</small><br>
+                                <a href="page_ready_inbox_message.html"><strong>Account Activation</strong></a>
+                            </div>
+                            <div class="alert alert-alt">
+                                Henry Ellis<small class="pull-right">40 min ago</small><br>
+                                <a href="page_ready_inbox_message.html"><strong>You reached 10.000 Followers!</strong></a>
+                            </div>
+                        </div>
+                        <!-- END Messages -->
+                    </div>
+                    <!-- END Sidebar Content -->
+                </div>
+                <!-- END Wrapper for scrolling functionality -->
+            </div>
+            <!-- END Alternative Sidebar -->
+            <!-- Main Sidebar -->
+            <div id="sidebar">
+                <!-- Wrapper for scrolling functionality -->
+                <div id="sidebar-scroll">
+                    <!-- Sidebar Content -->
+                    <div class="sidebar-content">
+                        <!-- Brand -->
+                        @if ((await UserManager.GetUserAsync(User)).ChucVu == 1)
+                        {
+                            <a class="sidebar-brand" style="margin-left: -15px;">
+                                <i class="gi gi-flash"></i><span class="sidebar-nav-mini-hide"><strong>Tiếp nhận </strong>Client</span>
+                            </a>
+                        }
+                        else if ((await UserManager.GetUserAsync(User)).ChucVu == 3)
+                        {
+                            <a class="sidebar-brand" style="margin: 0 auto;">
+                                <i class="gi gi-flash"></i><span class="sidebar-nav-mini-hide"><strong>Dược sĩ </strong>Client</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="sidebar-brand" style="margin: 0 auto;">
+                                <i class="gi gi-flash"></i><span class="sidebar-nav-mini-hide"><strong>Bác sĩ </strong>Client</span>
+                            </a>
+                        }
+
+                        <!-- END Brand -->
+                        <!-- User Info -->
+                        <div class="sidebar-section sidebar-user clearfix sidebar-nav-mini-hide">
+                            <partial name="~/Views/Shared/_LoginPartial.cshtml" />
+                        </div>
+                        <!-- END User Info -->
+                        <!-- Theme Colors -->
+
+                        <ul class="sidebar-section sidebar-themes clearfix sidebar-nav-mini-hide">
+                            <li>
+                                <a href="javascript:void(0)" class="themed-background-dark-spring themed-border-spring" data-theme="/MainElement/css/themes/spring.css" data-toggle="tooltip" title="Xanh lục"></a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="themed-background-dark-amethyst themed-border-amethyst" data-theme="/MainElement/css/themes/amethyst.css" data-toggle="tooltip" title="Tím"></a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="themed-background-dark-flatie themed-border-flatie" data-theme="/MainElement/css/themes/flatie.css" data-toggle="tooltip" title="Vàng"></a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)" class="themed-background-dark-fancy themed-border-fancy" data-theme="/MainElement/css/themes/fancy.css" data-toggle="tooltip" title="Fancy"></a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="themed-background-dark-fire themed-border-fire" data-theme="/MainElement/css/themes/fire.css" data-toggle="tooltip" title="Fire"></a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="themed-background-dark-coral themed-border-coral" data-theme="/MainElement/css/themes/coral.css" data-toggle="tooltip" title="Coral"></a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="themed-background-dark-lake themed-border-lake" data-theme="/MainElement/css/themes/lake.css" data-toggle="tooltip" title="Lake"></a>
+                            </li>
+                        </ul>
+
+
+                        <!-- END Theme Colors -->
+                        <!-- Sidebar Navigation -->
+                        <ul class="sidebar-nav" onclick="myActive(e)">
+                            <li>
+                                <a class="d-none"><i class="fas fa-home me-3 ms-2"></i><span class="sidebar-nav-mini-hide">Trang chủ</span></a>
+                            </li>
+                            @if ((await UserManager.GetUserAsync(User)).ChucVu == 1)
+                            {
+                                <!-- Phần Tiếp Nhận -->
+                                <li class="sidebar-header">
+                                    <span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Quick Settings"><i class="fas fa-concierge-bell"></i></a><a href="javascript:void(0)" data-toggle="tooltip" title="Create the most amazing pages with the widget kit!"></a></span>
+                                    <span class="sidebar-header-title">Tiếp nhận</span>
+                                </li>
+                                <li class="@Html.IsSelected(actions: "ThemPhieuKham", controllers: "TiepNhan")">
+                                    <a href="@Url.Action("ThemPhieuKham","TiepNhan")"><i class="fas fa-notes-medical sidebar-nav-icon me-3 ms-2"></i><span class="sidebar-nav-mini-hide"> Thêm phiếu khám</span></a>
+
+                                </li>
+                                <li class="@Html.IsSelected(actions: "QuanLyDatLich", controllers: "TiepNhan")">
+                                    <a href="@Url.Action("QuanLyDatLich","TiepNhan")"><i class="fas fa-calendar-week sidebar-nav-icon me-3 ms-2"></i><span class="sidebar-nav-mini-hide"> Quản lý đặt lịch</span></a>
+                                </li>
+                                <li class="@Html.IsSelected(actions: "CapNhatDichVu", controllers: "TiepNhan")">
+                                    <a href="@Url.Action("CapNhatDichVu","TiepNhan")"><i class="fas fa-pen-alt sidebar-nav-icon me-3 ms-2"></i><span class="sidebar-nav-mini-hide"> Cập nhật dịch vụ</span></a>
+                                </li>
+                            }
+                            else if ((await UserManager.GetUserAsync(User)).ChucVu == 3)
+                            {
+                                <!-- Phần Dược Sĩ -->
+                                <li class="sidebar-header">
+                                    <span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Quick Settings"><i class="fas fa-prescription-bottle-alt"></i></a></span>
+                                    <span class="sidebar-header-title">Dược sĩ</span>
+                                </li>
+
+                                <li class="@Html.IsSelected(actions: "ToaThuoc", controllers: "DuocSi")">
+                                    <a href="@Url.Action("ToaThuoc","DuocSi")"><i class="fas fa-file-medical sidebar-nav-icon me-3 ms-2"></i><span class="sidebar-nav-mini-hide"> Toa thuốc</span></a>
+                                </li>
+                                <li class="@Html.IsSelected(actions: "ToaThuocDangPhat", controllers: "DuocSi")">
+                                    <a href="@Url.Action("ToaThuocDangPhat","DuocSi")"><i class="fab fa-algolia sidebar-nav-icon me-3 ms-2"></i><span class="sidebar-nav-mini-hide"> Toa thuốc đang phát</span></a>
+                                </li>
+                                <li class="@Html.IsSelected(actions: "LichSuThuoc", controllers: "DuocSi")">
+                                    <a href="@Url.Action("LichSuThuoc","DuocSi")"><i class="fas fa-history sidebar-nav-icon me-3 ms-2"></i><span class="sidebar-nav-mini-hide"> Lịch sử</span></a>
+                                </li>
+                                <li class="@Html.IsSelected(actions: "DanhSachThuoc", controllers: "DuocSi")">
+                                    <a href="@Url.Action("DanhSachThuoc","DuocSi")"><i class="fas fa-capsules sidebar-nav-icon me-3 ms-2"></i><span class="sidebar-nav-mini-hide"> Danh sách thuốc</span></a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="sidebar-header">
+                                    <span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Quick Settings"><i class="fas fa-user-md"></i></a></span>
+                                    <span class="sidebar-header-title">Bác sĩ</span>
+                                </li>
+
+                                <li class="@Html.IsSelected(actions: "PhieuKham", controllers: "BacSi")">
+                                    <a href="@Url.Action("PhieuKham","BacSi")"><i class="fas fa-notes-medical sidebar-nav-icon me-3 ms-2"></i><span class="sidebar-nav-mini-hide"> Phiếu khám</span></a>
+                                </li>
+                                <li class="@Html.IsSelected(actions: "LichSuKham", controllers: "BacSi")">
+                                    <a href="@Url.Action("LichSuKham","BacSi")"><i class="fas fa-history sidebar-nav-icon me-3 ms-2"></i><span class="sidebar-nav-mini-hide"> Lịch sử khám</span></a>
+                                </li>
+
+
+                            }
+
+
+
+
+                        </ul>
+                        <!-- END Sidebar Navigation -->
+                    </div>
+                    <!-- END Sidebar Content -->
+                </div>
+                <!-- END Wrapper for scrolling functionality -->
+            </div>
+            <!-- END Main Sidebar -->
+            <!-- Main Container -->
+            <div id="main-container">
+                <!-- Header -->
+                <header class="navbar navbar-default">
+                    <!-- Left Header Navigation -->
+                    <ul class="nav navbar-nav-custom">
+                        <!-- Main Sidebar Toggle Button -->
+                        <li>
+                            <a href="javascript:void(0)" onclick="App.sidebar('toggle-sidebar');this.blur();" id="navBaricon">
+                                <i class="fas fa-bars"></i>
+                            </a>
+                        </li>
+                        <!-- END Main Sidebar Toggle Button -->
+                    </ul>
+                </header>
+                <!-- END Header -->
+                <!-- Page content -->
+                <div id="page-content">
+                    <!-- Dashboard Header -->
+                    <!-- For an image header add the class 'content-header-media' and an image as in the following example -->
+                    <div class="content-header content-header-media container m-auto">
+                        <div class="header-section">
+                            <div class="header-text-title">
+                                <div class="header-text-left">
+                                    <h1>Xin chào <strong>@Helper.GetName((await UserManager.GetUserAsync(User)).HoTen)</strong><br><small>Mừng bạn đã quay trở lại !</small></h1>
+                                </div>
+                                <!-- END Main Title -->
+                                <!-- Top Stats -->
+                                <div class="header-text-right">
+                                    <h2 class="animation-hatch">
+                                        <strong id="DoC"></strong><br>
+                                        <small id="locationMain"><i class="fa fa-map-marker"></i></small>
+                                    </h2>
+                                    <button onclick="getLocation()" id="btThoiTiet" class="display-none">Try It</button>
+                                </div>
+                                <!-- END Top Stats -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END Dashboard Header -->
+                    <!-- Body Start -->
+                    <div style="border: solid 0px; padding-top:10px;min-height:600px">
+                        @RenderBody()
+                    </div>
+                    <!-- Body End -->
+
+
+
+                </div>
+                <!-- END Page Content -->
+                <!-- Footer -->
+                <footer class="clearfix">
+                    
+                    <div class="pull-left">
+                        <span id="year-copy"></span> &copy; <a href="https://1.envato.market/x4R" target="_blank">ProUI 3.8</a>
+                    </div>
+                </footer>
+                <!-- END Footer -->
+            </div>
+            <!-- END Main Container -->
+        </div>
+        <!-- END Page Container -->
+    </div>
+    <!-- END Page Wrapper -->
+    <!-- Scroll to top link, initialized in js/app.js - scrollToTop() -->
+    <a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- END User Settings -->
+    <!--Start ChangePassword-->
+    <div id="modal-user-changepass" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header m-auto">
+                    <h2 class="modal-title"><i class="fa fa-pencil"></i> <strong>Đổi mật khẩu</strong></h2>
+                </div>
+                <!-- END Modal Header -->
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div id="myModalContent_ChangePass">
+
+                    </div>
+
+                </div>
+                <!-- END Modal Body -->
+            </div>
+        </div>
+    </div>
+    <!--End ChangePassword-->
+
+    
+
+    <!--Start ChangeInfo-->
+    <div id="modal_user_changeinfo" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header m-auto">
+                    <h2 class="modal-title"><i class="fa fa-pencil"></i> <strong>Cập nhật thông tin</strong></h2>
+                </div>
+                <!-- END Modal Header -->
+                <!-- Modal Body -->
+                <div class="modal-body">
+                        <div id="myModalContent_ChangeInfo">
+
+                        </div>
+                    </div>
+                <!-- END Modal Body -->
+            </div>
+        </div>
+    </div>
+    <!--End ChangePassword-->
+    <!-- jQuery, Bootstrap.js, jQuery plugins and Custom JS code -->
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="~/js/jquery-ui.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+
+
+    <script src="~/MainElement/js/plugins.js"></script>
+    <script src="~/MainElement/js/app.js"></script>
+
+    <!--Script chạy Active trên Menu-->
+    <script>
+        var DefaulTheme = '@(string.IsNullOrWhiteSpace((await UserManager.GetUserAsync(User)).Theme)? "spring.css": (await UserManager.GetUserAsync(User)).Theme)';
+        var colorList = $('.sidebar-themes');
+        var themeLink = $('#theme-link');
+        var themeColor = themeLink.length ? themeLink.attr('href') : 'default';
+        $('a[data-theme="' + themeColor + '"]', colorList)
+            .parent('li')
+            .addClass('active');
+
+        function myActive(e) {
+            var elems = document.querySelectorAll(".active");
+            [].forEach.call(elems, function (el) {
+                el.classList.remove("active");
+            });
+            e.target.className = "active";
+        }
+
+        //Hàm get vị trí
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        }
+
+        function showPosition(position) {
+
+            LoadThoiTiet(position.coords.latitude, position.coords.longitude);
+        }
+
+        $(document).ready(
+            function () {
+
+                $("#btThoiTiet").trigger('click');
+
+            });
+
+        function LoadTheme(name) {
+            if (Themes != null && Themes != '') {
+                $(`link[href="${DefaulTheme}"]`).before(`<link id="theme-link" rel="stylesheet" href="${name}">`);
+            }
+        }
+
+        //Hàm load hình
+        $('#upload-back').change(function (e) {
+            var self = this;
+
+            var file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+
+                var img = "<img src='" + reader.result + "' style='width: 100%'/>"
+                $('#image-holder2').html(img);
+            };
+            reader.readAsDataURL(file);
+
+        });
+
+        //Load thời tiết
+        function LoadThoiTiet(lat,lon) {
+            $.ajax({
+                url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=1f8c83dd8445415660abe62e1f2dd416`,
+                type: "Get",
+                timeout: 20000,
+                data: JSON,
+                async: true,
+                success: function (result) {
+                    $('#DoC').html(Math.ceil(result.main.temp - 273.15) + '&deg;C');
+                    $('#locationMain').html(result.name);
+
+                }
+            });
+        }
+
+
+        //Hàm open modal ChangePass
+        function OpenChangePass() {
+            $('#myModalContent_ChangePass').html("");
+
+            $.ajax({
+                url: '/Identity/ChangePassword/',
+                type: "Get",
+                timeout: 20000,
+                async: true,
+                success: function (result) {
+                    $('#myModalContent_ChangePass').html(result);
+                    $('#modal-user-changepass').modal('show');
+
+
+                    $('#preloader-wrapper').toggleClass('hide');
+                },
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        }
+
+        //Hàm open modal ChangeInfo
+
+        function OpenChangeInfo() {
+
+             $('#contentChangeInfo').html("");
+               $.get("@Url.Action("ChangeInfo","Identity")", function (result) {
+            $('#myModalContent_ChangeInfo').html(result);
+
+
+                   $('#modal_user_changeinfo').modal('show');
+
+
+                });
+
+           
+
+
+
+
+
+        }
+
+        //Hàm edit info NhanVienYTe
+        function EditInfo() {
+            if ($("#frm1").valid()) {
+                var formData = new FormData();
+                var fileUpload = $("#upload-back").get(0);
+                var file = fileUpload.files[0];
+                formData.append("file", file);
+                formData.append('UpdateEmail', $("#UpdateEmail").val());
+                formData.append('UpdateHoTen', $("#UpdateHoTen").val());
+                formData.append('UpdateSDT', $("#UpdateSDT").val());
+                formData.append('UpdateHinhAnh', $("#Edit_Hinh").val());
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Identity/ChangeInfo",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (result) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                        if (result.status != null) {
+                            if (result.status >= 1) {
+
+                                toastr.success(result.text);
+                                location.reload();
+                            }
+                            else {
+                                toastr.warning(result.text);
+                            }
+                        }
+                        else {
+                            $myModalContent.html(result);
+                        }
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    },
+                    failure: function (message) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                    }
+                });
+            }
+        }
+
+        //Hàm ChangePass
+        function ChangePass() {
+            if ($("#frm2").valid()) {
+                var formData = new FormData();
+
+                formData.append('Email', $("#Edit_Email").val());
+                formData.append('CurrentPassword', $("#Edit_PassOld").val());
+                formData.append('NewPassword', $("#Edit_Passnew").val());
+                formData.append('ConfirmPassword', $("#Edit_Passnew2").val());
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Identity/ChangePassword",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (result) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                        if (result.status != null) {
+                            if (result.status >= 1) {
+
+                                toastr.success(result.text);
+                                location.reload();
+                            }
+                            else {
+                                toastr.warning(result.text);
+                            }
+                        }
+                        else {
+                            $('#myModalContent_ChangePass').html(result);
+                        }
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    },
+                    failure: function (message) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                    }
+                });
+            }
+        }
+        $('a', colorList).click(function (e) {
+            // Get theme name
+           var themeColor = $(this).data('theme');
+
+            $('li', colorList).removeClass('active');
+            $(this).parent('li').addClass('active');
+
+            if (themeColor === 'default') {
+                if (themeLink.length) {
+                    themeLink.remove();
+                    themeLink = $('#theme-link');
+                }
+            } else {
+                if (themeLink.length) {
+                    themeLink.attr('href', themeColor);
+                } else {
+                    $('link[href="/MainElement/css/themes.css"]').before('<link id="theme-link" rel="stylesheet" href="' + themeColor + '">');
+                    themeLink = $('#theme-link');
+                    $.ajax({
+                        url: '@Url.Action("ChangeTheme","Identity")',
+                        type: "Get",
+                        timeout: 20000,
+                        data: {
+                            ThemeUrl: themeColor
+                        },
+                        async: true,
+                        success: function (result) {
+
+
+                        }
+                    });
+                }
+            }
+
+
+        });
+
+    </script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+    <!--Kết thúc Script chạy Active trên Menu-->
+    <!-- Google Maps API Key (you will have to obtain a Google Maps API key to use Google Maps) -->
+    <!-- For more info please have a look at https://developers.google.com/maps/documentation/javascript/get-api-key#key -->
+    <script src="https://maps.googleapis.com/maps/api/js?key="></script>
+    <script src="~/MainElement/js/helpers/gmaps.min.js"></script>
+    <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/toastr.js"></script>
+    <script src="~/js/formToObject.js"></script>
+    <script src="~/MainElement/js/site.js"></script>
+    <script src="~/js/datatableExt.js"></script>
+    <link rel="stylesheet" href="~/css/PagedList.css" />
+
+
+
+
+
+
+
+    @RenderSection("Scripts", required: false)
+    <!-- Load and execute javascript code used only in this page -->
+    <script src="~/MainElement/js/pages/index.js"></script>
+    <script>$(function () { Index.init(); });</script>
+</body>
+</html>

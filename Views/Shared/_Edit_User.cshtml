@@ -1,0 +1,71 @@
+﻿@model HospitalManagement_Entities.Models.ViewModel.UpdateUser
+
+
+<form id="frm1" enctype="multipart/form-data" class="form-horizontal" onsubmit="return false;">
+    <div class="col-8 m-auto mb-2">
+        <div id="image-holder2" class="text-center">
+            <img class="profile-edit-img" src="~/images/NguoiDung/@Model.UpdateHinhAnh" id="Edit_Hinh">
+        </div>
+        <br>
+        <div class="pt-1 text-center mb-4">
+            <label class="btn-img btn mt-4" style=" background-color: #52B788; color: white; text-align: center; border: 2px solid #52B788;">
+                <i class="fa fa-image"></i>&nbsp;Chọn hình<input style="display:none;" class="form-control" type="file" id="upload-back" accept="image/*" />
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group row mb-2 col-8 m-auto">
+        <label class="control-label ms-1" for="user-settings-email">Email</label>
+        <div class="">
+            <input type="email" class="form-control" asp-for="UpdateEmail" readonly>
+        </div>
+    </div>
+    <div class="form-group row mb-2 col-8 m-auto">
+        <label class="control-label ms-1" for="user-settings-email">Họ và tên</label>
+        <div>
+            <input type="text" class="form-control" asp-for="UpdateHoTen">
+            @Html.ValidationMessageFor(model => model.UpdateHoTen, "", new { @class = "text-danger" })
+
+        </div>
+    </div>
+    <div class="form-group row mb-2 col-8 m-auto">
+        <label class="control-label ms-1" for="user-settings-email">Số điện thoại</label>
+        <div>
+            <input type="text" class="form-control" asp-for="UpdateSDT">
+            @Html.ValidationMessageFor(model => model.UpdateSDT, "", new { @class = "text-danger" })
+
+        </div>
+    </div>
+    <br />
+    <div class="form-group text-end mb-2">
+        <div class="col-12 text-right">
+            <button type="submit" onclick="EditInfo()" class="btn text-light" id="btn-confirm" style="width:20%; background-color: #52b788; color:white;">Lưu</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+        </div>
+    </div>
+</form>
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial2"); }
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+
+
+
+
+<script>
+    //Hàm load hình
+    $('#upload-back').change(function (e) {
+        var self = this;
+
+        var file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+
+            var img = "<img src='" + reader.result + "' style='width: 100%'/>"
+            $('#image-holder2').html(img);
+        };
+        reader.readAsDataURL(file);
+
+    });
+</script>
