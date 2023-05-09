@@ -1,0 +1,124 @@
+﻿@model HospitalManagement.Models.PhieuDatLich
+
+<style>
+    .box-modal {
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        margin: 30px 20px 30px 30px;
+    }
+
+    .modal-header h2 {
+        margin-top: 10px;
+        font-weight: 500;
+    }
+
+    .box-content {
+        padding-inline: 20px;
+    }
+
+    .box-title {
+        background-color: white;
+        position: absolute;
+        margin-top: -18px;
+    }
+
+        .box-title h6 {
+            font-weight: 600;
+        }
+
+    #title-border {
+        margin-top: 20px;
+        padding-inline: 20px;
+    }
+
+    #btclose {
+        background-color: #FA4F4F;
+        color: white;
+    }
+</style>
+<div>
+    <div class="modal-header">
+        <h2>Cập nhật đặt lịch</h2>
+    </div>
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { @class = "d-flex flex-wrap", name = "frm", id = "frm", enctype = "multipart/form-data" }))
+    {
+        <div class="box-modal" name="frm" id="frm" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.MaPhieu)
+            <div class="box-content mb-4">
+                <div class="box-title ms-3">
+                    <h6 id="title-history" class="p-2">Thông tin bệnh nhân</h6>
+                </div>
+                <div class="row ms-1 me-1 mb-1" id="title-border">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.MaPhieu)
+                    <div class="col-sm-6 mt-4 mb-3">
+                        <h6>
+                            <strong>
+                                Tên bệnh nhân:
+                            </strong><br />
+                            @Model.TenBN
+                        </h6>
+                    </div>
+                    <div class="col-sm-6 mt-4 mb-3">
+                        <h6>
+                            <strong>Số điện thoại:</strong><br />
+                            @Model.SDT
+                        </h6>
+                    </div>
+                    <div class="col-sm-6 mt-4 mb-3">
+                        <h6>
+                            <strong>Ngày Sinh</strong><br />
+                            @Model.NgaySinh?.ToString("dd/MM/yyyy")
+                        </h6>
+                    </div>
+                    <div class="col-sm-6 mt-4 mb-3">
+                        <h6>
+                            <strong>Ngày khám</strong><br />
+                            <input class="textbox-n form-control" type="datetime-local" asp-for="@Model.NgayKham">
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="modal-footer">
+        <div class="text-right">
+            <a class="btn" id="btnUpdate" onclick="UpdateDatLich()"><i class="far fa-save"></i>&nbsp;Cập nhật</a>
+            <button type="button" class="btn" id="btclose" data-bs-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Đóng</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function UpdateDatLich() {
+        if ($("#frm").valid()) {
+            var obj = $("#frm").serialize();
+            $.ajax({
+                type: "POST",
+                url: "/TiepNhan/Edit",
+                dataType: "json",
+                data: obj,
+                success: function (result) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                    if (result.status >= 1) {
+                        toastr.success(result.text);
+                    }
+                    else {
+                        toastr.warning(result.text);
+                    }
+                    Clear();
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                },
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+
+        }
+    }
+</script>
+
+
+

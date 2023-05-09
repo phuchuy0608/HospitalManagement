@@ -1,0 +1,91 @@
+
+
+
+@model IPagedList<TheLoai>
+
+@using X.PagedList.Mvc.Core;
+
+
+@using X.PagedList;
+@using X.PagedList.Web.Common
+
+<style>
+    .list-table {
+        min-height: 400px
+    }
+
+    list-table table {
+        border: 1px solid gray;
+    }
+
+    #thead {
+        background-color: deepskyblue;
+        color: white;
+    }
+
+    .table-btn a:hover {
+        transform: scale(1.075)
+    }
+
+    .btn-edit {
+        background-color: rgb(17, 138, 178);
+    }
+
+    .table-btn a i {
+        color: white;
+    }
+</style>
+<div id="list">
+
+    <div class="list-table">
+        <table class="table table-bordered text-left w-100 " style="font-size:small">
+                <tr id="thead">
+                    <th class="col-8">
+                        Tên thể loại
+                    </th>
+                    <th class="col-4 text-center">Thao tác</th>
+                </tr>
+                @foreach (var item in ViewBag.Names as IEnumerable<TheLoai>)
+                {
+                    <tr>
+                        <td class="col-8">@item.TenTL</td>
+                        <td class="table-btn text-nowrap col-4 text-center">
+                            <a class="btn-edit btn btn-sm active" title="Chỉnh sửa" onclick="Edit('@item.MaTL')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        </td>
+                    </tr>
+                }
+        </table>
+    </div>
+
+    <div class="text-right">
+
+        @{
+            var pageRender = new PagedListRenderOptions
+            {
+                MaximumPageNumbersToDisplay = 5,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+                DisplayLinkToLastPage = PagedListDisplayMode.Never,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                DisplayPageCountAndCurrentLocation = false,
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new string[] { "page-item" },
+                PageClasses = new string[] { "page-link" },
+
+                ContainerDivClasses = new[] { "pagination-container" }
+            };
+        }
+
+        @{
+            var searchModel = ViewBag.Data as TheLoaiSearchModel;
+        }
+
+        @Html.PagedListPager((IPagedList<TheLoai>)ViewBag.Names, page => Url.Action("PageList", new { page, TenTLSearch = searchModel.TenTLSearch }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(pageRender, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "nameListContainer" }))
+    </div>
+</div>
+
+
+
+
+
+

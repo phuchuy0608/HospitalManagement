@@ -1,0 +1,148 @@
+﻿@model PhieuKhamViewModel
+<style>
+    /* định dạng thẻ div chưa các button tab */
+    div.tab-modal {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #ffff;
+    }
+
+        /* định dạng các button tab */
+        div.tab-modal button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+            font-weight: 600;
+        }
+    /* định dạng nội dung hiển thị */
+    .tabcontent {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+</style>
+
+<h4 style="text-align:center; font-weight:bold">XÁC NHẬN THÔNG TIN</h4>
+<hr />
+<br />
+<div style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; margin-inline: 5px; margin-top: -5px;">
+    <div class="tab-modal" id="tabModal">
+        <button id="tab1" onclick="showDonThuoc()" class="tablinks active">Dịch vụ</button>
+        <button id="tab2" onclick="showThongTin()" class="tablinks">Thông tin bệnh nhân</button>
+    </div>
+    <div id="HTML" class="tabcontent p-3" style="padding-inline: 40px">
+        <div class="ms-3" style="background-color: white; position: absolute;">
+            <h6 id="title-history" class="p-2" style="font-weight: 600;">Thông tin cá nhân</h6>
+        </div>
+        <div class="row ms-1 me-1 mb-1" id="title-border" style="margin-top: 20px;">
+            <div class="col-sm-4 mt-4">
+                <h6>
+                    <strong>
+                        Tên bệnh nhân:
+                    </strong><br />
+                    @Model.HoTen
+                </h6>
+            </div>
+            <div class="col-sm-4 mt-4">
+                <h6>
+                    <strong>
+                        Số điện thoại
+                    </strong><br />
+                    @Model.SDT
+                </h6>
+            </div>
+            <div class="col-sm-4 mt-4">
+                <h6>
+                    <strong>
+                        Ngày sinh
+                    </strong><br />
+                    @Model.NgaySinh?.ToString("dd/MM/yyyy")
+                </h6>
+            </div>
+            <div class="col-sm-4 mt-4">
+                <h6>
+                    <strong>
+                        Địa chỉ
+                    </strong><br />
+                    @Model.DiaChi
+                </h6>
+            </div>
+            <div class="col-sm-4 mt-4">
+                <h6>
+                    <strong>
+                        Bác sĩ
+                    </strong><br />
+                    @ViewBag.BacSi.HoTen
+                </h6>
+            </div>
+            <div class="col-sm-4 mt-4">
+                <h6>
+                    <strong>
+                        Triệu chứng
+                    </strong><br />
+                    @Model.TrieuChung
+                </h6>
+            </div>
+        </div>
+    </div>
+
+    <div id="PHP" class="tabcontent p-3" style="font-size: 17px">
+        <table class="table table-bordered">
+            <tr id="table-header" class="text-white">
+                <th class="col-3">STT</th>
+                <th class="col-6">Dịch vụ</th>
+                <th class="col-3">Đơn giá</th>
+            </tr>
+            @for (int i = 0; i < Model.dichVus.Count; i++)
+            {
+                <tr>
+                    <td class="col-3">@(i + 1)</td>
+                    <td class="col-6">@Model.dichVus.ElementAt(i).TenDV</td>
+                    <td class="col-3">@Model.dichVus.ElementAt(i).DonGia?.ToString("n0").Replace(",", ".") VNĐ</td>
+                </tr>
+            }
+        </table>
+        <div id="TongTien" style="text-align:right">
+            <h4>Tổng tiền : @((Model.dichVus.Sum(x => x.DonGia))?.ToString("n0").Replace(",", ".")) VNĐ</h4>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+    var buttons = document.getElementsByClassName('tablinks');
+    var contents = document.getElementsByClassName('tabcontent');
+
+    function showDonThuoc() {
+        $('.tabcontent').each(function () {
+
+            $(this).prop('style', 'display: none');
+        });
+
+        $('#PHP').prop('style', 'display: block');
+    }
+    function showThongTin() {
+        $('.tabcontent').each(function () {
+
+            $(this).prop('style', 'display: none');
+        });
+
+        $('#HTML').prop('style', 'display: block');
+    }
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function () {
+            var id = this.textContent;
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            this.className += " active";
+            showContent(id);
+        });
+    }
+    showDonThuoc();
+</script>
+

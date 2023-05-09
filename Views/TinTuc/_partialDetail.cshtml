@@ -1,0 +1,50 @@
+﻿@model HospitalManagement.Models.TinTuc
+
+<style>
+    .main-top .main-title-2 {
+        background-color: white;
+        text-align: right;
+        border-left: 8px solid deepskyblue;
+    }
+
+        .main-top .main-title-2 h2 {
+            font-weight: 700;
+        }
+
+    .main-specialist {
+        text-align: right;
+    }
+
+        .main-specialist label {
+            color: deepskyblue;
+            font-weight: 600;
+        }
+</style>
+
+<div class="main">
+    <div class="main-detail">
+        <div class="main-top">
+            <div class="main-title-2">
+                <h1>@Model.TieuDe</h1>
+            </div>
+            <div class="main-specialist">
+                <label>Thể loại:  @Model.MaTLNavigation.TenTL</label>
+            </div>
+        </div>
+        <div class="main-bottom">
+            <div class="main-content">
+                @Html.Raw(Model.NoiDung)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+

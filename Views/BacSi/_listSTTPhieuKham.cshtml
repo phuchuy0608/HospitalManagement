@@ -1,0 +1,70 @@
+﻿@model IPagedList<PhieuKham>
+@using HospitalManagement.Models.SearchModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common
+<div id="list">
+
+    <div style="min-height:400px">
+        <table class="table table-bordered text-center" style="width:100%">
+                <tr id="table-header" class="text-light">
+                    <th>STT</th>
+                    <th style="text-align: left;">Tên bệnh nhân</th>                     
+                    <th>Ngày sinh</th>
+                    <th>Thao tác</th>
+                </tr>                
+                @if ((ViewBag.Names as IEnumerable<PhieuKham>).Count() > 0)
+                {
+                    @foreach (var item in ViewBag.Names as IEnumerable<PhieuKham>)
+                    {
+                        <tr>
+                            <td>@item.STTPhieuKham.STT</td>
+                            <td style="text-align: left;">@item.MaBNNavigation.HoTen</td>
+                            <td>@item.MaBNNavigation.NgaySinh?.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <a class="btn btn-info btn-sm active" title="Khám bệnh" href="@Url.Action("KhamBenh","BacSi",new {MaPK = item.MaPK })"> <i class="fas fa-stethoscope" aria-hidden="true"></i></a>
+                                <a class="btn btn-info btn-sm active" title="Xuống cuối danh sách" onclick="ChangeDoUuTien('@item.STTPhieuKham.MaPhieuKham')"> <i class="fas fa-arrow-down" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center">Không có dữ liệu</td>
+                    </tr>
+                }
+
+        </table>
+    </div>
+
+
+    <div style="float:right">
+
+        @{
+            var pageRender = new PagedListRenderOptions
+            {
+                MaximumPageNumbersToDisplay = 5,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+                DisplayLinkToLastPage = PagedListDisplayMode.Never,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                DisplayPageCountAndCurrentLocation = false,
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new string[] { "page-item" },
+                PageClasses = new string[] { "page-link" },
+
+                ContainerDivClasses = new[] { "pagination-container" }
+
+
+            };
+        }
+        @{
+            var searchModel = ViewBag.Data as PhieuKhamSearchModel;
+        }
+
+        <input class="d-none" id="CurrentPage" value="@ViewBag.Page" />
+        @Html.PagedListPager((IPagedList<PhieuKham>)ViewBag.Names, page => Url.Action("ReloadPageSTT", new { page, MaBS = searchModel.MaBS, KeywordSearch = searchModel.KeywordSearch }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(pageRender, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "nameListContainer" }))
+    </div>
+
+</div>

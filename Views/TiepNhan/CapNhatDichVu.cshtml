@@ -1,0 +1,104 @@
+﻿@inject UserManager<NhanVienYte> UserManager;
+@using X.PagedList;
+
+
+@{
+    ViewData["Title"] = "Cập nhật dịch vụ";
+    Layout = "~/Views/Shared/LayoutMain/MainLayout.cshtml";
+}
+<div class="block">
+    <div class="block-title">
+        <h2><strong>Cập nhật dịch vụ</strong></h2>
+    </div>
+    <div class="d-flex justify-content-between">
+        <div class="w-50">
+            <input class="mr-2 mb-2 form-control" id="TimKiem" placeholder="Nhập từ khóa cần tìm" />
+        </div>
+        <div class="button-reload">
+            <button type="button" class="btn" onclick="Clear()" id="btSeach"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;Làm mới</button>
+        </div>
+    </div>
+    <div id="nameListContainer" class="mt-4">
+        <partial name="_ListPhieuKham" model="ViewBag.Names as IPagedList<PhieuKham>" />
+    </div>
+</div>
+@section scripts{
+    <script>
+        var table;
+        var obj = {};
+        var Clienid;
+        $(document).ready(
+            function () {
+                reloadpage(1);
+                Clienid = '@Html.Raw((await UserManager.GetUserAsync(User)).Id)';
+            });
+        function reloadpage(page) {
+            obj = {};
+            obj.Page = page;
+            $("#TimKiem").val("");
+            $.ajax({
+                url: '/TiepNhan/ReLoadCapNhat/',
+                type: "Get",
+                timeout: 20000,
+                async: false,
+                data: obj,
+                success: function (result) {
+                    $('#nameListContainer').html(result);
+                },
+
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        }
+        $("#TimKiem").keyup(function () {
+
+            obj = {};
+
+            obj.KeyWordSearch = $(this).val()
+
+            obj.page = 1;
+            $.ajax({
+                url: '/TiepNhan/ReLoadCapNhat/',
+
+                type: "Get",
+                data: obj,
+
+                success: function (result) {
+
+                    $('#nameListContainer').html(result);
+                },
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        });
+        function Clear() {
+            reloadpage(1);
+        }
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/signalServer")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+            } catch (err) {
+                console.log(err);
+                setTimeout(start, 5000);
+            }
+        };
+        connection.onclose(async () => {
+            await start();
+        });
+        // Start the connection.
+        start();
+        connection.on("ReceiveMessage", (Ten, NgaySinh, SDT, NgayKham, MaPhieu) => {
+            toastr.success("Có một lịch đặt mới");
+
+        });
+    </script>
+}
+

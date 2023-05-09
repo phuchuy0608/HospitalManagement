@@ -22,7 +22,6 @@ namespace HospitalManagement.Service
 
 
         }
-        
         public async Task<NhanVienYte> Get(string id)
         {
 

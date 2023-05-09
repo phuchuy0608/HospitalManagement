@@ -1,0 +1,141 @@
+﻿@model HospitalManagement.Models.PhieuKham
+
+<style>
+    .table tr td {
+        background-color: white;
+    }
+
+    div.tab-modal {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #ffff;
+    }
+
+        /* định dạng các button tab */
+        div.tab-modal button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+            font-weight: 600;
+        }
+    /* định dạng nội dung hiển thị */
+    .tabcontent {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+</style>
+<h2 class="modal-title" style="text-align:center; font-weight:bold">THÔNG TIN PHIẾU KHÁM</h2>
+<br />
+<div class="col-10 m-auto" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; margin-inline: 5px; margin-top: -5px;">
+    <div class="tab-modal" id="tabModal">
+        <button id="tab1" onclick="showDonThuoc()" class="tablinks active">Thông tin bệnh nhân</button>
+        <button id="tab2" onclick="showThongTin()" class="tablinks">Thông tin khám bệnh</button>
+    </div>
+    <div id="PHP" class="tabcontent">
+        <input style="display:none" />
+        <table class="table table-borderless">
+            <tr>
+                <td class="col-3">Tên bệnh nhân :</td>
+                <td class="col-9"><p style="font-weight: 600;">@Model.MaBNNavigation.HoTen</p></td>
+            </tr>
+            <tr>
+                <td class="col-3">Số điện thoại :</td>
+                <td class="col--9"><p style="font-weight: 600;">@Model.MaBNNavigation.SDT</p></td>
+            </tr>
+            <tr>
+                <td class="col-3">Ngày lập hóa đơn :</td>
+                <td class="col-9"><p style="font-weight: 600;">@Model.NgayKham.ToString("dd/MM/yyyy HH:mm:ss")</p></td>
+            </tr>
+            <tr>
+                <td class="col-3">Chẩn đoán :</td>
+                <td class="col-9"><p style="font-weight: 600;">@Model.ChanDoan</p></td>
+            </tr>
+            <tr>
+                <td class="col-3">Tên bác sĩ :</td>
+                <td class="col-9"><p style="font-weight: 600;">@Model.MaBSNavigation.HoTen</p></td>
+            </tr>
+        </table>
+    </div>
+    <div id="HTML" class="tabcontent">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="col-3">Tên dịch vụ</th>
+                    <th class="col-1 text-center">Đơn giá</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.CTLichSuDichVu as IEnumerable<DichVu>)
+                {
+                    <tr>
+                        <td class="col-3">@item.TenDV</td>
+                        <td class="col-1 text-center">@item.DonGia?.ToString("n0").Replace(",", ".")</td>
+
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="col-9"><p style="color: black">Tên thuốc</p></th>
+                    <th class="col-3 text-center"><p style="color: black">Số lượng</p></th>
+                </tr>
+            </thead>
+            @foreach (var item in ViewBag.CTLichSuThuoc as IEnumerable<ChiTietToaThuoc>)
+            {
+                <tr>
+                    <td class="col-9">
+                        <h6 style="font-weight: bold">@item.MaThuocNavigation.TenThuoc</h6>
+                        <p style="font-style: italic"> Ngày uống @item.LanTrongNgay lần, mỗi lần @item.VienMoiLan viên, uống @(item.TruocKhian ? "trước khi ăn" : "sau khi ăn"), uống @(item.Sang ? "sáng" : "") @(item.Trua ? ", trưa" : "") @(item.Chieu ? ", chiều" : "").</p>
+                    </td>
+                    <td class="col-3 text-center">@item.SoLuong</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+
+
+</div>
+<script type="text/javascript">
+    var buttons = document.getElementsByClassName('tablinks');
+    var contents = document.getElementsByClassName('tabcontent');
+
+    function showDonThuoc() {
+        $('.tabcontent').each(function () {
+
+            $(this).prop('style', 'display: none');
+        });
+
+        $('#PHP').prop('style', 'display: block');
+    }
+    function showThongTin() {
+        $('.tabcontent').each(function () {
+
+            $(this).prop('style', 'display: none');
+        });
+
+        $('#HTML').prop('style', 'display: block');
+    }
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function () {
+            var id = this.textContent;
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            this.className += " active";
+            showContent(id);
+        });
+    }
+    showDonThuoc();
+</script>

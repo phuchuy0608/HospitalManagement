@@ -31,7 +31,7 @@
     .userInput input {
         height: 40px;
         border: none;
-        border-bottom: 2px solid #27AE60;
+            border-bottom: 2px solid deepskyblue;
         text-align: center;
         font-size: 20px;
         font-weight: 600;
@@ -46,7 +46,7 @@
         width: 200px;
         height: 40px;
         border: none;
-        background-color: #27AE60;
+        background-color: deepskyblue;
         margin: 20px auto 10px auto;
         font-size: 18px;
         font-weight: 600;
@@ -100,9 +100,9 @@
                     </div>
                 </div>
                 <div class="btn-wrapper mt-0">
-                   @* <button class="btn theme-btn-1 btn-effect-1 text-uppercase" onclick="OpenLichSuDatLich()">Xem lịch sử</button>*@
+                    <button class="btn theme-btn-1 btn-effect-1 text-uppercase" onclick="OpenLichSuDatLich()">Xem lịch sử</button>
                     
-                    <button class="btn theme-btn-1 btn-effect-1 text-uppercase" onclick="GetOTP()">Xem lịch sử</button>
+                   @* <button class="btn theme-btn-1 btn-effect-1 text-uppercase" onclick="GetOTP()">Xem lịch sử</button>*@
                 </div>
             </div>
         </div>
@@ -133,14 +133,14 @@
                 </div>
 
                 <!--Dữ liệu-->
-                @*<div class="mini-cart-product-area">
+                <div class="mini-cart-product-area">
                     <div class="mini-cart-item clearfix">
                         <div id="ShowLichSu" class="mini-cart-info row">
 
 
                         </div>
                     </div>
-                </div>*@
+                </div>
 
             </div>
         </div>
@@ -219,44 +219,46 @@
 
     }
 
-    function GetOTP() {
-        if ($('#SDT').val() == '') {
-            $('#textErrorSDT').removeClass("d-none");
-        }
-        else {
-            $('#textErrorSDT').addClass("d-none");
-            $.ajax({
-                url: "/Home/Generate",
-                type: 'GET',
-                data: {
-                    SDT: $('#SDT').val()
-                },
-                success: function (response) {
-                    console.log(response);
-                    $('#modelOTP').modal('show');
-                }
-            });
-        }        
-    }
+    //function GetOTP() {
+    //    if ($('#SDT').val() == '') {
+    //        $('#textErrorSDT').removeClass("d-none");
+    //    }
+    //    else {
+    //        $('#textErrorSDT').addClass("d-none");
+    //        $.ajax({
+    //            url: "/Home/Generate",
+    //            type: 'GET',
+    //            data: {
+    //                SDT: $('#SDT').val()
+    //            },
+    //            success: function (response) {
+    //                console.log(response);
+    //                $('#modelOTP').modal('show');
+    //            }
+    //        });
+    //    }        
+    //}
 
 
 
     function OpenLichSuDatLich() {
-        var _otp = String($('#ist').val()) + String($('#sec').val()) + String($('#third').val()) + String($('#fourth').val()) + String($('#fifth').val()) + String($('#sixth').val())
+        //var _otp = String($('#ist').val()) + String($('#sec').val()) + String($('#third').val()) + String($('#fourth').val()) + String($('#fifth').val()) + String($('#sixth').val())
         
         $.ajax({
             url: "/Home/SearchDatLichByPhoneNumber",
             type: 'GET',
             data: {
                 SDT: $('#SDT').val(),
-                otp: _otp
+                //otp: _otp
             },
             success: function (response) {
+             
+                    
                 if (response.status == -3) {
                     $('#textErrorOTP').removeClass("d-none");
                 }
                 else {
-                    hideModal('modelOTP');
+                //    hideModal('modelOTP');
                     $("#ShowLichSu").html("");
                     if (response.status == -2) {
                         $("#ShowLichSu").append(`

@@ -1,0 +1,182 @@
+﻿@model PhieuKham;
+<style>
+    /* định dạng thẻ div chưa các button tab */
+    div.tab-modal {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #ffff;
+    }
+
+        /* định dạng các button tab */
+        div.tab-modal button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+            font-weight: 600;
+        }
+    /* định dạng nội dung hiển thị */
+    .tabcontent {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+</style>
+<h4 style="text-align:center; font-weight:bold" id="Title">XÁC NHẬN THÔNG TIN</h4>
+<hr />
+<br />
+<div style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; margin-inline: 5px; margin-top: -5px;">
+    <div class="tab-modal" id="tabModal" style="display: inline-flex">
+        <button id="tab1" onclick="showDonThuoc()" class="tablinks active" style="font-size: 2.5vmin;">Toa thuốc</button>
+        <button id="tab2" onclick="showThongTin()" class="tablinks" style="font-size: 2.5vmin;">Thông tin bệnh nhân</button>
+    </div>
+    <div id="ThongTin" class="tabcontent p-3" style="padding-inline: 40px">
+        <div class="ms-3" style="background-color: white; position: absolute;">
+            <h6 id="title-history" class="p-2" style="font-weight: 600;">Thông tin bệnh nhân</h6>
+        </div>
+        <div class="row ms-1 me-1 mb-1" id="title-border" style="margin-top: 20px;">
+            <div class="col-sm-4 mt-4">
+                <h6>
+                    <strong>
+                        Tên bệnh nhân:
+                    </strong><br />
+                    @Model.MaBNNavigation.HoTen
+                </h6>
+            </div>
+            <div class="col-sm-4 mt-4">
+                <h6>
+
+                    <strong>Ngày khám:</strong><br />
+                    @Model.NgayKham.ToString("dd/MM/yyyy")
+                </h6>
+            </div>
+            <div class="col-sm-4 mt-4">
+                <h6>
+                    <strong>Ngày tái khám</strong><br />
+                    @Model.NgayTaiKham?.ToString("dd/MM/yyyy")
+                </h6>
+            </div>
+        </div>
+        <div class="ms-3" style="background-color: white; position: absolute;">
+            <h6 id="title-history" class="p-2" style="font-weight: 600;">Thông tin sinh hiệu</h6>
+        </div>
+        <div class="row ms-1 me-1 mb-1" id="title-border" style="margin-top: 22px;">
+            <div class="col-sm-4 mt-4">
+                <h6>
+                    <strong>Mạch:</strong>
+                    @Model.Mach
+                </h6>
+            </div>
+            <div class="col-sm-4 mt-4">
+                <h6>
+                    <strong>Huyết Áp:</strong>
+                    @Model.HuyetAp
+                </h6>
+            </div>
+            <div class="col-sm-4 mt-4 mb-4">
+                <h6>
+                    <strong>Nhiệt độ:</strong>
+                    @Model.NhietDo
+                </h6>
+            </div>
+            <div class="col-sm-4">
+                <h6>
+                    <strong>SPO2:</strong>
+                    12
+                </h6>
+            </div>
+        </div>
+
+        <div class="ms-3" style="background-color: white; position: absolute;">
+            <h6 id="title-history" class="p-2" style="font-weight: 600;">Kết quả khám bệnh</h6>
+        </div>
+        <div class="row ms-1 me-1 mb-1" id="title-border" style="margin-top: 22px;">
+
+
+
+            <div class="row mt-4 ms-4 mb-1">
+                @if (ViewBag.ListTC != null)
+                {
+                    foreach (var ct in ViewBag.ListTC as List<ChiTietBenhModel>)
+                    {
+                        <h5 style="font-weight: 600; text-transform: capitalize;">@ct.TenBenh</h5>
+                        @foreach (var tc in ct.TrieuChung)
+                        {
+                            <div class="col-sm-6">
+
+                                <h6>
+                                    <img src="~/MainElement/img/circle_PNG17.png" style="width: 5px;" class="me-2 mb-1" />
+                                    @tc
+                                </h6>
+                            </div>
+                        }
+
+                    }
+                }
+            </div>
+
+
+        </div>
+    </div>
+
+    <div id="TTThuoc" class="tabcontent p-3" style="font-size: 17px">
+        <table class="table table-bordered">
+            <tr id="table-header" class="text-light">
+                <th class="col-8">Tên thuốc</th>
+                <th class="col-4 text-center">Số lượng</th>
+            </tr>
+            <tbody id="toathuocFinal">
+                @foreach (var item in Model.ToaThuoc.ChiTietToaThuoc)
+                {
+                    <tr>
+                        <td class="col-8">
+                            <h6 style="font-weight: bold">@item.MaThuocNavigation.TenThuoc</h6>
+                            <p style="font-style: italic"> Ngày uống @item.LanTrongNgay lần, mỗi lần @item.VienMoiLan viên, uống @(item.TruocKhian ? "trước khi ăn" : "sau khi ăn"), uống @(item.Sang ? "sáng" : "") @(item.Trua ? ", trưa" : "") @(item.Chieu ? ", chiều" : "").</p>
+                        </td>
+                        <td class="col-2 text-center">@item.SoLuong</td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var buttons = document.getElementsByClassName('tablinks');
+    var contents = document.getElementsByClassName('tabcontent');
+
+    function showDonThuoc() {
+        $('.tabcontent').each(function () {
+
+            $(this).prop('style', 'display: none');
+        });
+
+        $('#TTThuoc').prop('style', 'display: block');
+    }
+    function showThongTin() {
+        $('.tabcontent').each(function () {
+
+            $(this).prop('style', 'display: none');
+        });
+
+        $('#ThongTin').prop('style', 'display: block');
+    }
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function () {
+            var id = this.textContent;
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            this.className += " active";
+            showContent(id);
+        });
+    }
+    showDonThuoc();
+
+</script>

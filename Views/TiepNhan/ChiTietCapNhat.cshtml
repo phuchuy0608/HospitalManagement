@@ -1,0 +1,403 @@
+﻿@model PhieuKham
+@{
+    ViewData["Title"] = "THÊM PHIẾU KHÁM";
+    Layout = "~/Views/Shared/LayoutMain/MainLayout.cshtml";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Get, new { name = "frm", id = "frm", enctype = "multipart/form-data", @class = "row form needs-validation" }))
+{
+        <div class="col-md-6">
+            <!-- Basic Form Elements Block -->
+            <div class="block">
+                <!-- Basic Form Elements Title -->
+                <div class="block-title">
+                    <h2><strong>Thông tin cá nhân</strong></h2>
+                </div>
+                <input style="display:none" name="MaPK" id="MaPK" value="@Model.MaPK" />
+            @Html.HiddenFor(model => model.STTPhieuKham.MaUuTien)
+
+                <!-- END Form Elements Title -->
+                <!-- Basic Form Elements Content -->
+                <div class="form-horizontal form-bordered">
+                    <div class="row g-2 align-items-center m-1">
+                        <div class="col-sm-2">
+                            <label for="Hoten" class="col-form-label">SĐT</label>
+                        </div>
+                        <div class="col-sm-10">
+                            <input type="text" value="@Model.MaBNNavigation.SDT"  class="form-control" placeholder="Vui lòng nhập số điện thoại" readonly>
+                        </div>                  
+                    </div>
+                    <div class="row g-2 align-items-center m-1">
+                        <div class="col-sm-2">
+                            <label for="Hoten" class="col-form-label">Họ tên</label>
+                        </div>
+                        <div class="col-sm-10">
+                            <input type="text" value="@Model.MaBNNavigation.SDT" class="form-control" placeholder="Vui lòng nhập họ tên" readonly>
+                        </div>                   
+                    </div>
+                    <div class="row g-2 align-items-center m-1">
+                        <div class="col-sm-2">
+                            <label for="NgaySinh" class="col-form-label">Ngày sinh</label>
+                        </div>
+                        <div class="col-sm-10">
+                            <input type="date" value="@(Model.MaBNNavigation.NgaySinh!=null?Model.MaBNNavigation.NgaySinh?.ToString("yyyy-MM-dd"):"")" readonly  class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="row g-2 align-items-center m-1">
+                        <div class="col-2">
+                            <label for="GioiTinh" class="col-form-label">Giới tính</label>
+                        </div>
+                        <div class="col-10">
+                            <select style="font-size: 13px;" class="form-select" asp-for="@Model.MaBNNavigation.GioiTinh" disabled>
+                                <option value="0">Nam</option>
+                                <option value="1">Nữ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-2 align-items-center m-1">
+                        <div class="col-2">
+                            <label for="DiaChi" class="col-form-label">Địa chỉ</label>
+                        </div>
+                        <div class="input-validation col-10">
+                            <textarea type="textarea"  class="form-control" readonly>@Model.MaBNNavigation.DiaChi</textarea>
+                        </div>                   
+                    </div>
+                </div>
+                <!-- END Basic Form Elements Content -->
+            </div>
+            <!-- END Basic Form Elements Block -->
+        </div>
+
+        <div class="col-md-6">
+            <!-- Basic Form Elements Block -->
+            <div class="block">
+                <!-- Basic Form Elements Title -->
+                <div class="block-title">
+                    <h2><strong>Thông tin bệnh</strong></h2>
+                </div>
+                <!-- END Form Elements Title -->
+                <!-- Basic Form Elements Content -->
+                <div class="form-horizontal form-bordered p-0">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Chuyên khoa</label>
+                            <select id="MaCK" style="font-size: 13px;" class="form-select" asp-items="@ViewBag.ListCK" disabled>
+                                <option value="">Chọn chuyên khoa</option>
+                            </select>
+                        @*span validate chuyên khoa*@
+                            <div style="margin-left: 5px; margin-top: 5px;">
+                                <span class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">Bác sĩ</label>
+                            <select style="font-size: 13px;" class="form-select"  disabled>
+                                <option value="">@Model.MaBSNavigation.HoTen</option>
+                            </select>                        
+                        </div>
+                        <div class="col-12">
+                            <div class="col-2">
+                                <label for="TrieuChung" class="col-form-label">Triệu chứng</label>
+                            </div>
+                            <div class="col-12">
+                                <textarea type="textarea"  readonly class="form-control" style="height: 128px;">@Model.TrieuChungSoBo</textarea>
+                            </div>
+                        @*span validate Triệu chứng*@
+                            <div style="margin-left: 5px; margin-top: 5px;">
+                                <span class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+}
+
+
+
+<div class="col-12">
+    <div class="block">
+        <div class="d-flex justify-content-end">
+            <div class="form-group">
+                <button id="btn-confirm" class="btn me-1" style="color:white;" onclick="OpenThemDichVu()">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Thêm dịch vụ
+                </button>
+            </div>
+            <div class="form-group">
+                <button class="btn" style="background-color: rgb(250, 79, 79); color: white; " onclick="Refresh()">
+                    <i class="fa fa-refresh" aria-hidden="true"></i> Thêm lại
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <table class="table table-bordered">
+                <tr id="table-header" class="text-light">
+                    <th class="col-6">Dịch vụ</th>
+                    <th class="col-4">Đơn giá</th>
+                    <th class="col-2 text-center">Thao tác</th>
+                </tr>
+                <tbody id="listDV">
+                    @foreach (var item in ViewBag.ListOld as List<ChiTietDV>)
+                    {
+                            <tr><td style="display:none">@item.MaDV</td><td class="col-6">@item.MaDVNavigation.TenDV</td><td class="col-4">@item.MaDVNavigation.DonGia?.ToString("n0").Replace(",", ".")</td><td class="col-2 text-center"><button class="btn btn-danger btn-sm remove" disabled> <i class="fa fa-trash"></i></button></td></tr>
+                    }
+                </tbody>
+            </table>
+            <div class=" form-group" style="text-align:right">
+                <button class="btn btn-primary me-1" onclick="OpenXacNhanDV()" id="btn-confirm"><i class="fa fa-check"></i> Xác nhận</button>
+                <button type="reset" class="btn btn-warning" onclick=""><i class="fa fa-repeat"></i> Làm mới</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Model chính-->
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <div class="modal-title" style="font-size: 17px;text-transform:uppercase;color:#3c8dbc"><strong id="myModalTitle"></strong></div>
+            </div>
+            <div class="modal-body">
+
+                <div id="myModalContent">
+
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="text-right">
+
+                    <button type="button" id="btCheckOut" class="btn"><i class="fa fa-save"></i>&nbsp;Thanh Toán</button>
+
+                    <button type="button" class="btn" style="background-color: rgb(250, 79, 79); color: white;" id="btclose" data-bs-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Đóng</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="modalDV" class="modal fade">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div class="modal-title" style="font-size: 17px;text-transform:uppercase;color:#3c8dbc"><strong id="myModalTitle"></strong></div>
+            </div>
+            <div class="modal-body">
+
+                <div id="myModalContent">
+                    <partial name="_AddDichVu" model="@ViewBag.DichVu" />
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="text-right">
+
+
+                    <button type="button" class="btn" style="background-color: rgb(250, 79, 79); color: white;" id="btclose" data-bs-dismiss="modal"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;Đóng</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+<script>
+    $(document).ready(function () {
+        $("#SDT").keyup(function () {
+            $.get("/tiepnhan/BenhNhan_bind", { SDT: $(this).val() }, function (data) {
+
+                if (data != null) {
+                    $("#HoTen").val(data.HoTen);
+                    $("#NgaySinh").val(data.NgaySinh.substring(0, 10));
+                    $("#DiaChi").val(data.DiaChi);
+                    if (data.GioiTinh) {
+                        $('#GioiTinh').val(1)
+                    }
+                    else {
+                        $('#GioiTinh').val(0)
+                    }
+                    $("#MaBN").val(data.MaBN);
+                }
+                else {
+                    $("#HoTen").val("");
+                    $("#NgaySinh").val("");
+                    $("#DiaChi").val(data.DiaChi);
+
+                    $('#GioiTinh').val(0);
+
+                    $("#MaBN").val("");
+                }
+            });
+
+        });        
+    });
+
+</script>
+@section Scripts{
+
+
+        <script>
+            var lisdv = [];
+            function OpenThemDichVu() {
+                $('#modalDV').modal('show');
+                $('#btSave').show();
+            }
+            function Refresh() {
+                $("#listDV > tr").each(function (i) {
+                    $tr = $(this)
+                    var $td = $tr.find("td");
+                    $("#table_dichvu > tbody").append(`<tr><td style="display:none">${$td.eq(0).text()}</td><td>${$td.eq(1).text()}</td><td>${$td.eq(2).text()}</td><td><button class="btn btn-success btn-sm addDV"><i class="fa fa-plus" aria-hidden="true"></i></button></td></tr>`);
+                    $tr.remove();
+                });
+            }
+            //Hàm mở modal của nút xác nhận
+            function OpenXacNhanDV() {
+                if ($("#frm").valid()) {                         
+                    listdv = [];
+                    $('.NewDV').each(function () {
+                        console.log($(this).html());
+                        $tr = $(this)
+                        var $td = $tr.find("td");
+                        listdv.push({ MaDV: $td.eq(0).text() })
+                    });
+                    $.ajax({
+                        url: "/TiepNhan/XacNhanCapNhat/",
+                        type: 'POST',
+                        async: true,
+                        data: {
+                            MaPK: $('#MaPK').val(),
+                            dichVus: listdv
+                        },
+                        success: function (response) {
+                            if (response.status == -2) {
+                                toastr.warning(response.text)
+                            }
+                            else {
+                                $("#myModalContent").html(response);
+                                $('#myModal').modal('show');
+                                $('#btSave').hide();
+                                $('#btCheckOut').show();
+                            }
+
+                        }
+                    });
+                }
+            }
+            $("#btCheckOut").click(function () {
+
+                $(this).prop("disabled", true);
+
+                $(this).html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span> Waiting</span>'
+                );
+                $.ajax({
+                    type: "POST",
+                    url: "/TiepNhan/UpdateCheckOut/",
+                    data:
+                    {
+                        MaPK: $('#MaPK').val(),
+                        dichVus: listdv
+                    },
+                    success: function (result) {
+                        $('#preloader-wrapper').toggleClass('hide');
+
+                        if (result.status >= 1) {
+
+                            toastr.success(result.text);
+                            window.location.href = result.redirectUrL;
+                        }
+                        else {
+                            toastr.warning(result.text);
+
+                        }
+
+                    },
+                    error: function (errormessage) {
+                        $(this).prop("disabled", false);
+
+                        $(this).html(
+                            'Retry');
+                    },
+                    failure: function (message) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                    }
+                });
+
+
+            });
+
+            $("#MaCK").change(function () {
+
+                var id = $(this).val();
+
+                $("#MaBS").empty();
+                $.get("/tiepnhan/DocTor_Bind", { MaCK: id }, function (data) {
+                    var v = "<option>Chọn bác sĩ</option>";
+                    $.each(data, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#MaBS").html(v);
+                });
+
+            });
+
+            $(document).on('click', '.remove', function () {
+                $tr = $(this).parent().parent();
+                var $td = $tr.find("td");
+                $("#table_dichvu > tbody").append(`<tr><td style="display:none">${$td.eq(0).text()}</td><td>${$td.eq(1).text()}</td><td>${$td.eq(2).text()}</td><td><button class="btn btn-success btn-sm addDV"><i class="fa fa-plus" aria-hidden="true"></i></button></td></tr>`);
+                $tr.remove();
+
+            });
+            $(document).on('click', '.addDV', function () {
+
+                $tr = $(this).parent().parent();
+                var $td = $tr.find("td");
+
+                $("#listDV").append(`<tr class="NewDV"><td style="display:none">${$td.eq(0).text()}</td><td class="col-6">${$td.eq(1).text()}</td><td class="col-4">${$td.eq(2).text()}</td><td class="col-2 text-center"><button class="btn btn-sm remove" style="background-color: rgb(250, 79, 79); color: white;"> <i class="fa fa-trash"></i></button></td></tr>`);
+                $tr.remove();
+            });
+
+
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/signalServer")
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            async function start() {
+                try {
+                    await connection.start();
+                    console.log("SignalR Connected.");
+                } catch (err) {
+                    console.log(err);
+                    setTimeout(start, 5000);
+                }
+            };
+            connection.onclose(async () => {
+                await start();
+            });
+            // Start the connection.
+            start();
+            connection.on("ReceiveMessage", (Ten, NgaySinh, SDT, NgayKham, MaPhieu) => {
+                toastr.success("Có một lịch đặt mới");
+
+            });       
+        </script>
+}

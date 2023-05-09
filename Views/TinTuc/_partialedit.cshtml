@@ -1,0 +1,64 @@
+﻿
+
+@model HospitalManagement.Models.TinTuc
+
+<h4>Cập nhật thông tin</h4>
+<hr />
+<div >
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { @class = "d-flex flex-wrap", name = "frm", id = "frm", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()       
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           <div class="form-group col-4" style="display:none"><label class="control-label col-md-6" for="MaBaiViet">MaBaiViet</label>
+                <div class="col-md-10">
+                @Html.EditorFor(model => model.MaBaiViet, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MaBaiViet, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group col-4"> 
+            @Html.LabelFor(model => model.TieuDe, "TieuDe", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                @Html.EditorFor(model => model.TieuDe, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TieuDe, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group col-4"> 
+            @Html.LabelFor(model => model.NoiDung, "NoiDung", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                @Html.EditorFor(model => model.NoiDung, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NoiDung, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group form-check col-6">
+                <label class="form-check-label">
+                @Html.CheckBoxFor(model => model.TrangThai) TrangThai
+                </label>
+            </div>                                      
+            <div class="form-group col-4">
+            @Html.LabelFor(model => model.MaNguoiViet, "MaNguoiViet", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                @Html.DropDownList("MaNguoiViet", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MaNguoiViet, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-4"> 
+            @Html.LabelFor(model => model.MaTL, "MaTL", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                @Html.EditorFor(model => model.MaTL, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MaTL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+    }   
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+    });
+</script>
+
+

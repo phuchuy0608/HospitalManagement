@@ -1,0 +1,178 @@
+﻿@model IEnumerable<HospitalManagement.Models.ToaThuoc>
+@{
+
+    ViewData["Title"] = "LỊCH SỬ THUỐC";
+
+    Layout = "~/Views/Shared/LayoutMain/MainLayout.cshtml";
+}
+
+
+
+
+<style>
+    .a {
+        text-decoration: none !important
+    }
+</style>
+
+<div class="block">
+    <div class="block-title">
+        <h2><strong>Toa thuốc đã phát</strong></h2>
+    </div>
+    <div class="d-flex justify-content-between">
+        <div class="w-50">
+            <input class="mr-2 mb-2 form-control" id="TimKiem" placeholder="Nhập từ khóa cần tìm" />
+        </div>
+        <div class="button-reload">
+            <button type="button" class="btn" style="color:white;" onclick="Clear()" id="btSeach"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;Làm mới</button>
+        </div>
+    </div>
+
+
+
+    @*<div class="form-check mt-2 mb-3" style="float: right; margin-right: 15px;">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+    <label class="form-check-label" for="flexCheckChecked">
+    Hiện tất cả
+    </label>
+    </div>*@
+    <div id="nameListContainer">
+
+        <partial name="_ListLichSu" model="@ViewBag.Names as IPagedList<ToaThuoc>" />
+
+    </div>
+
+
+
+</div>
+
+<div class="modal fade" id="ModalChiTietThuoc" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div id="myModalContent">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-right">
+
+
+                    <button type="button" class="btn" style="background-color: #FA4F4F; color: white;" id="btclose" data-bs-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@section Scripts{
+
+
+
+    <script type="text/javascript" src="~/js/datetime.js"></script>
+
+    <script>
+
+
+        var obj = {};
+        $(document).ready(
+
+            function () {
+
+                ReloadPage(1);
+
+            });
+
+
+        //Hàm mở modal của chi tiết lịch sử thuốc
+        function Detail(_maPhieu) {
+            $.ajax({
+                url: "/DuocSi/ChiTietLichSu/",
+                type: 'GET',
+                data: {
+                    MaPhieu: _maPhieu
+                },
+                success: function (response) {
+
+                    $("#myModalContent").html(response);
+                    $('#ModalChiTietThuoc').modal('show');
+                    $('#btXacNhan').show();
+                }
+            });
+        }
+
+        function ReloadPage(page) {
+            obj = {};
+
+            obj.Page = page;
+            obj.TrangThai = 2;
+            obj.TrangThaiPK = 2;
+            $("#TimKiem").val("");
+            $.ajax({
+                url: '/DuocSi/ReloadPageLichSu/',
+
+                type: "Get",
+                timeout: 20000,
+
+                async: false,
+
+                data: obj,
+
+                success: function (result) {
+
+
+                    $('#nameListContainer').html(result);
+                },
+
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        }
+        $("#TimKiem").keyup(function () {
+
+            obj = {};
+
+            obj.KeyWordSearch = $(this).val()
+            obj.TrangThai = 2;
+            obj.TrangThaiPK = 2;
+            obj.page = 1;
+            $.ajax({
+                url: '/DuocSi/ReloadPageLichSu/',
+
+                type: "Get",
+
+
+                data: obj,
+
+                success: function (result) {
+
+
+                    $('#nameListContainer').html(result);
+                },
+
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+
+
+
+
+        });
+
+
+        function Clear() {
+            ReloadPage(1);
+        }
+
+
+    </script>
+}
+

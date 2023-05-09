@@ -1,0 +1,73 @@
+﻿@model IPagedList<Thuoc>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common
+
+<style>
+    .drug-img {
+        width: 8vw;
+        height: 8vw;
+        object-fit: cover;
+        object-position: center center;
+    }
+</style>
+
+<div id="list">
+
+    <div style="min-height:400px">
+        <table class="table table-bordered text-center" style="width:100%">
+            <tr id="table-header" class="text-light" style="font-size: 2.5vmin">
+                <th style="text-align: left;">Tên thuốc</th>
+                <th>Vị trí</th>
+                <th>Đơn giá</th>
+                <th>Trạng thái</th>
+                <th>Hình ảnh</th>
+                <th>Thao tác</th>
+            </tr>
+            @foreach (var item in ViewBag.Names as IEnumerable<Thuoc>)
+            {
+                <tr style="font-size: 2.5vmin">
+                    <td style="text-align: left;">@item.TenThuoc</td>
+                    <td>@item.Vitri</td>
+                    <td>@item.DonGia?.ToString("n0").Replace(',', '.')</td>
+                    <td>@(item.TrangThai ? "Hoạt động" : "Không hoạt động")</td>
+                    <td>
+                        <img src="~/images/imagesThuoc/@item.HinhAnh" class="drug-img" />
+                    </td>
+                    <td class="text-nowrap"><a class="btn btn-info btn-sm active" onclick="_Detail('@item.MaThuoc')" title="Thông tin"> <i class="fa fa-info-circle" aria-hidden="true"></i></a></td>
+                </tr>
+            }
+        </table>
+    </div>
+
+
+    <div style="float:right">
+
+        @{
+            var pageRender = new PagedListRenderOptions
+            {
+                MaximumPageNumbersToDisplay = 5,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+                DisplayLinkToLastPage = PagedListDisplayMode.Never,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                DisplayPageCountAndCurrentLocation = false,
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new string[] { "page-item" },
+                PageClasses = new string[] { "page-link" },
+
+
+                ContainerDivClasses = new[] { "pagination-container" }
+
+
+            };
+        }
+        @{
+            var searchModel = ViewBag.Data as ThuocSearchModel;
+        }
+
+
+        @Html.PagedListPager((IPagedList<Thuoc>)ViewBag.Names, page => Url.Action("PageList", new { page, TenThuocSearch = searchModel.KeyWordSearch,TrangThai = 1}), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(pageRender, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "nameListContainer" }))
+    </div>
+
+</div>

@@ -1,0 +1,198 @@
+﻿@inject UserManager<NhanVienYte> UserManager
+@using X.PagedList;
+
+
+@{
+    ViewData["Title"] = "Lịch sử khám";
+    Layout = "~/Views/Shared/LayoutMain/MainLayout.cshtml";
+}
+
+<div class="block">
+    <div class="block-title">
+        <h2><strong>Lịch sử khám</strong></h2>
+    </div>
+    <div class="d-flex justify-content-between">
+        <div class="w-50">
+            <input class="mr-2 mb-2 form-control" id="TimKiem" placeholder="Nhập từ khóa cần tìm" />
+        </div>
+        <div class="button-reload">
+            <button type="button" class="btn" onclick="Clear()" id="btSeach"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;Làm mới</button>
+        </div>
+    </div>
+    <div id="nameListContainer" class="mt-3">
+        <partial name="_LichSuKham" model="ViewBag.Names as IPagedList<PhieuKham>" />
+
+    </div>
+</div>
+
+
+
+<!--Model chính-->
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div id="myModalContent">
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="text-right">
+                    <button type="button" class="btn" style="background-color: #FA4F4F; color: white;" id="btclose" data-bs-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Đóng</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+@section Scripts{
+    <script>
+        var $id = "";
+        var $modal = $('#myModal');
+        var $myModalContent = $("#myModalContent");
+        var $modalins = $('#myModalins');
+        var $myModalContentins = $("#myModalContentins");
+        var $myModalTitle = $("#myModalTitle");
+        var $myModalTitleins = $("#myModalTitleins");
+        var Clienid;
+        $(document).ready(
+
+            function () {
+
+                Clienid = '@Html.Raw((await UserManager.GetUserAsync(User)).Id)';
+
+            });
+        function reloadpage(page) {
+            obj = {};
+
+            obj.Page = page;
+            $("#TimKiem").val("");
+            $.ajax({
+                url: '/BacSi/PagePhieuKham/',
+
+                type: "Get",
+                timeout: 20000,
+
+                async: false,
+
+                data: obj,
+
+                success: function (result) {
+
+
+                    $('#nameListContainer').html(result);
+                },
+
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        }
+        $("#TimKiem").keyup(function () {
+            if ($(this).val().length >= 2) {
+                obj = {};
+
+                obj.KeyWordSearch = $(this).val()
+
+                obj.page = 1;
+                $.ajax({
+                    url: '/BacSi/PagePhieuKham/',
+
+                    type: "Get",
+
+
+                    data: obj,
+
+                    success: function (result) {
+
+
+                        $('#nameListContainer').html(result);
+                    },
+
+                    failure: function (message) {
+                        $('#preloader-wrapper').toggleClass('hide');
+                    }
+                });
+            }
+
+
+
+        });
+
+
+        function Clear() {
+
+
+            reloadpage(1);
+        }
+
+        function _Detail(id_) {
+            $myModalContent.html("");
+            $.get("/BacSi/GetJsonPK", { MaPK: id_ }, function (data) {
+
+
+                $.ajax({
+                    url: "/BacSi/GetToaThuoc/",
+                    type: 'POST',
+                    data: {
+                        phieukham: data
+
+                    },
+                    success: function (response) {
+
+                        $("#myModalContent").html(response);
+                        $("#Title").html("Lịch sử khám");
+                        $('#myModal').modal('show');
+
+
+                    }
+                });
+
+            });
+
+        }
+
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/PhieuKham")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+            } catch (err) {
+                console.log(err);
+                setTimeout(start, 5000);
+            }
+        };
+
+        connection.onclose(async () => {
+            await start();
+        });
+
+
+        // Start the connection.
+        start();
+
+        connection.on("SentDocTor", (id) => {
+
+            if (Clienid == id) {
+
+                toastr.success("Có một bệnh nhân mới");
+
+            }
+        });
+    </script>
+
+}
+
+
+

@@ -1,0 +1,92 @@
+﻿@model HospitalManagement.Models.PhieuDatLich
+
+<style>
+    .box-modal {
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        margin: 30px;
+    }
+
+    .modal-header h2 {
+        margin-top: 10px;
+        font-weight: 500;
+    }
+
+    .box-content {
+        padding: 20px;
+    }
+
+    .box-title {
+        background-color: white;
+        position: absolute;
+    }
+
+        .box-title h6 {
+            font-weight: 600;
+        }
+
+    #title-border {
+        margin-top: 20px;
+        padding-inline: 20px;
+    }
+
+    #btclose {
+        background-color: #FA4F4F;
+        color: white;
+    }
+</style>
+<div>
+    <div class="modal-header">
+        <h2>Thông tin đặt lịch</h2>
+        <hr />
+    </div>
+    <div class="box-modal" name="frm" id="frm" enctype="multipart/form-data">
+        <div class="box-content">
+            <div class="box-title ms-3">
+                <h6 id="title-history" class="p-2">Thông tin bệnh nhân</h6>
+            </div>
+            <div class="row ms-1 me-1 mb-1" id="title-border">
+                <div class="col-sm-6 mt-4 mb-3">
+                    <h6>
+                        <strong>
+                            Tên bệnh nhân:
+                        </strong><br />
+                        @Model.TenBN
+                    </h6>
+                </div>
+                <div class="col-sm-6 mt-4 mb-3">
+                    <h6>
+                        <strong>Số điện thoại:</strong><br />
+                        @Model.SDT
+                    </h6>
+                </div>
+                <div class="col-sm-6 mt-4 mb-3">
+                    <h6>
+                        <strong>Ngày sinh</strong><br />
+                        @Model.NgaySinh?.ToString("dd/MM/yyyy")
+                    </h6>
+                </div>
+                <div class="col-sm-6 mt-4 mb-3">
+                    <h6>
+                        <strong>Ngày khám</strong><br />
+                        @Model.NgayKham?.ToString("dd/MM/yyyy hh:mm tt")
+                    </h6>
+                </div>
+                <div class="col-sm-6 mt-4 mb-3">
+                    <h6>
+                        <strong>Ghi chú</strong><br />
+                        @(string.IsNullOrEmpty(Model.GhiChu) ? "Không có" : Model.GhiChu)
+                    </h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-right">
+            <a id="btSave" class="btn border-0" style="color: white;" href="@Url.Action("ThemPhieuKham","TiepNhan", new {MaPhieu=Model.MaPhieu })"><i class="far fa-print"></i>&nbsp;Tạo phiếu</a>
+
+            <button type="button" class="btn border-0" id="btclose" data-bs-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Đóng</button>
+        </div>
+    </div>
+</div>
+
+

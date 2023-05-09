@@ -1,0 +1,149 @@
+﻿@model HospitalManagement.Models.ToaThuoc
+
+
+<style>
+    /* định dạng thẻ div chưa các button tab */
+    div.tab-modal {
+        overflow: hidden;
+        border-bottom: 1px solid #ccc;
+        background-color: #ffff;
+    }
+
+        /* định dạng các button tab */
+        div.tab-modal button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+            font-weight: 600;
+        }
+    /* định dạng nội dung hiển thị */
+    .tabcontent {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+</style>
+<h4 style="text-align:center; font-weight:bold">THÔNG TIN TOA THUỐC</h4>
+<hr />
+<br />
+
+<div style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; margin-inline: 5px; margin-top: -5px;" id="pannelToaThuoc">
+    <div class="tab-modal" id="tabModal" style="display: inline-flex" ">
+        <button id="tab1" onclick="showDonThuoc()" class="tablinks active" style="font-size: 2.5vmin">Toa thuốc</button>
+        <button id="tab2" onclick="showThongTin()" class="tablinks" style="font-size: 2.5vmin;">Thông tin bệnh nhân</button>
+    </div>
+    <div style="text-align: right; color: deepskyblue; margin-bottom: 10px; font-weight: bold;">
+        <input style="display:none" value="@Model.MaPhieuKham" id="maPK" />
+    </div>
+
+    <div id="HTML" class="tabcontent p-3 border-0" style="padding-inline: 40px">
+        <div class="ms-3" style="background-color: white; position: absolute;">
+            <h6 id="title-history" class="p-2" style="font-weight: 600;">Thông tin bệnh nhân</h6>
+        </div>
+        <div class="row ms-1 me-1 mb-1" id="title-border" style="margin-top: 20px;">
+            <div class="col-sm-6 mt-4">
+                <h6 style=" font-size: 3vmin">
+                    <strong>
+                        Tên bệnh nhân:
+                    </strong><br />
+                    @Model.MaPhieuKhamNavigation.MaBNNavigation.HoTen
+                </h6>
+            </div>
+            <div class="col-sm-6 mt-4">
+                <h6 style=" font-size: 3vmin">
+
+                    <strong>Số điện thoại</strong><br />
+                    @Model.MaPhieuKhamNavigation.MaBNNavigation.SDT
+                </h6>
+            </div>
+            <div class="col-sm-6 mt-4">
+                <h6 style=" font-size: 3vmin">
+                    <strong>Ngày sinh</strong><br />
+                    @Model.MaPhieuKhamNavigation.MaBNNavigation.NgaySinh?.ToString("dd/MM/yyyy")
+                </h6>
+            </div>
+            <div class="col-sm-6 mt-4">
+                <h6 style=" font-size: 3vmin">
+                    <strong>Địa chỉ</strong><br />
+                    @Model.MaPhieuKhamNavigation.MaBNNavigation.DiaChi
+                </h6>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div id="PHP" class="tabcontent p-3 border-0" style="font-size: 17px">
+        <table class="table table-bordered">
+            <tr id="table-header" class="text-light" style="font-size: 2.5vmin">
+                <th class="col-5">Tên thuốc</th>
+                <th class="col-2 text-center">Số lượng</th>
+                <td class="col-2">Đơn giá</td>
+                <td class="col-3">Thành tiền</td>
+            </tr>
+            <tbody id="toathuocFinal">
+                @{
+                decimal toTal = 0;
+                }
+                @foreach (var item in ViewBag.CTToaThuoc as IEnumerable<ChiTietToaThuoc>)
+                {
+                <tr style="font-size: 2.5vmin">
+                    <td class="col-5">
+                        <h6 style="font-weight: bold; font-size: 3vmin">@item.MaThuocNavigation.TenThuoc</h6>
+                        <p style="font-style: italic">@item.GhiChu</p>
+                    </td>
+                    <td class="col-2 text-center">@item.SoLuong</td>
+                    <td class="col-2">@item.MaThuocNavigation.DonGia?.ToString("n0").Replace(',', '.') VNĐ</td>
+                    <td class="col-3">@((item.SoLuong*item.MaThuocNavigation.DonGia)?.ToString("n0").Replace(',', '.')) VNĐ</td>
+
+                </tr>
+                toTal +=(decimal)(item.SoLuong * item.MaThuocNavigation.DonGia);
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="p-3" id="TongTien">
+        <h4 style="text-align: right; font-size: 3vmin;">Tổng tiền: @toTal.ToString("n0").Replace(',', '.') VNĐ</h4>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var buttons = document.getElementsByClassName('tablinks');
+    var contents = document.getElementsByClassName('tabcontent');
+
+    function showDonThuoc() {
+        $('.tabcontent').each(function () {
+
+            $(this).prop('style', 'display: none');
+        });
+
+        $('#PHP').prop('style', 'display: block');
+    }
+    function showThongTin() {
+        $('.tabcontent').each(function () {
+
+            $(this).prop('style', 'display: none');
+        });
+
+        $('#HTML').prop('style', 'display: block');
+    }
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function () {
+            var id = this.textContent;
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            this.className += " active";
+            showContent(id);
+        });
+    }
+    showDonThuoc();
+
+</script>

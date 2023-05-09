@@ -1,0 +1,693 @@
+﻿@{
+    ViewData["Title"] = "CHẨN ĐOÁN";
+    Layout = "~/Views/Shared/GuestLayout.cshtml";
+}
+<link rel="stylesheet" href="~/font-awesome-4.7/font-awesome-4.7/css/font-awesome.min.css">
+<style>
+
+    .ui-autocomplete {
+        position: absolute;
+        z-index: 1000;
+        display: none;
+        float: left;
+        min-width: 160px;
+        /* padding: 5px 0;
+                margin: 2px 0 0;*/
+        list-style: none;
+        font-size: 14px;
+        text-align: left;
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        background-clip: padding-box;
+        font-family: Arial !important;
+    }
+
+    .title {
+        margin-top: 20px;
+    }
+
+    .test .test-detail {
+        margin-bottom: 2%;
+    }
+
+        .test .test-detail .test-head {
+            background-color: rgb(228, 228, 228);
+        }
+
+        .test .test-detail .test-body {
+            padding-left: 68px;
+        }
+
+        .test .test-detail .test-body-1 {
+            padding-inline: 68px;
+        }
+
+    .test-body .test-body-item {
+        margin-top: 5%;
+    }
+
+    .btn-select {
+        width: 180px;
+        height: 50px;
+        background-color: deepskyblue;
+        color: white;
+        margin-left: 50px;
+    }
+
+    .test-foot {
+        margin-top: 10px;
+    }
+
+        .test-foot .test-foot-btn button {
+            width: 150px;
+            height: 40px;
+            background-color: deepskyblue;
+            color: white;
+        }
+
+            .test-foot .test-foot-btn button:disabled {
+                width: 150px;
+                height: 40px;
+                background-color: #95d5b2;
+                color: white;
+                cursor: not-allowed;
+            }
+
+    .test .test-result {
+        margin-top: 2%;
+    }
+
+        .test .test-result .test-head {
+            background-color: rgb(228, 228, 228);
+        }
+
+    .btn-contact {
+        width: 230px;
+        height: 50px;
+        background-color: rgb(245, 249, 250);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        position: relative;
+    }
+
+    .result-btn .btn-booking {
+        width: 230px;
+        height: 50px;
+        background-color: deepskyblue;
+        color: white;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    .btn-disease {
+        width: 230px;
+        height: 50px;
+        background-color: deepskyblue;
+        color: white;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    .modal-dialog {
+        margin-top: 50px;
+    }
+
+    .symptom-list .symptom-item {
+        display: flex;
+        /*        border: 1px solid gray;
+        */
+    }
+
+        .symptom-list .symptom-item p {
+            width: 80%;
+            margin: 0 20px 0 0;
+            font-size: 20px;
+            flex-wrap: wrap;
+        }
+
+        .symptom-list .symptom-item img {
+            width: 7px;
+            height: 7px;
+            margin: 14px 10px 0 5px;
+        }
+
+    .symptom-item button {
+        padding-top: 2px;
+        float: right;
+        background: none;
+    }
+
+        .symptom-item button i {
+            font-size: 20px;
+            color: #ff002b;
+        }
+
+        .symptom-item button:hover {
+            transform: scale(1.075);
+            font-size: 20px;
+            color: #ff002b;
+            float: right;
+        }
+
+    .result-content {
+        display: flex;
+        padding: 10px;
+        margin-left: -20px;
+    }
+
+    .result-chart {
+        width: calc(80% - 20px);
+        margin-left: 20px;
+    }
+
+    .result-btn {
+        width: 19%;
+        margin: 20px 0 0 20px;
+        text-align: right;
+    }
+
+    .canvasjs-chart-credit {
+        display: none;
+    }
+
+    .test-head {
+        background-color: rgb(228, 228, 228);
+        height: 50px;
+        padding-top: 10px;
+    }
+
+    input.form-control {
+        height: 50px;
+    }
+
+    .button-add-1 {
+        display: none;
+    }
+
+        .button-add-1 .btn-select {
+            width: 80px;
+            height: 30px;
+            background-color: deepskyblue;
+            color: white;
+            font-size: 10px;
+            margin-left: 10px;
+        }
+
+    .test-foot {
+        margin-right: 55px;
+    }
+
+    label.checkbox-inline {
+        font-size: 20px;
+    }
+
+    .result-body {
+        padding: 10px 65px 0 65px;
+    }
+
+    @@media only screen and (max-width: 600px) {
+        .container {
+        }
+
+        .test-head {
+            height: 30px;
+            padding-top: 6px;
+        }
+
+        .bd-highlight p {
+            font-size: 10px;
+        }
+
+        .test .test-detail .test-body-1 {
+            padding-inline: 10px;
+        }
+
+        input.form-control {
+            height: 30px;
+            padding: 5px;
+        }
+
+        .input-select input {
+            font-size: 10px;
+        }
+
+            .input-select input::-webkit-input-placeholder {
+                font-size: 10px;
+            }
+
+        .button-add {
+            display: none;
+        }
+
+        .button-add-1 {
+            display: block;
+        }
+
+        #TenTrieuChung {
+            font-size: 13px;
+        }
+
+        #btnTrash i {
+            font-size: 15px;
+        }
+
+        .test-foot {
+            margin-right: 0;
+        }
+
+        #btNext, #btFinal {
+            width: 80px;
+            height: 30px;
+            font-size: 10px;
+        }
+
+        label.checkbox-inline {
+            font-size: 13px;
+        }
+
+            label.checkbox-inline input[type=checkbox] {
+                margin-top: 5px;
+                transform: scale(0.7);
+            }
+
+        .result-body {
+            padding: 10px;
+        }
+        /*.result-body-title {
+                margin: 10px;
+            }*/
+        .result-body-title d-flex p {
+            font-size: 10px
+        }
+
+        .result-content {
+            display: flex;
+            padding: 10px;
+            margin-left: -10px;
+            flex-wrap: wrap;
+        }
+
+        .result-chart {
+            width: calc(80% - 10px);
+            margin-left: 10px;
+            font-size: 10px;
+        }
+
+        .result-btn {
+            width: 19%;
+            margin: 20px 0 0 20px;
+            text-align: right;
+        }
+
+        .btn-contact {
+            width: 230px;
+            height: 50px;
+            background-color: rgb(245, 249, 250);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            position: relative;
+        }
+
+        .result-btn .btn-booking {
+            width: 230px;
+            height: 50px;
+            background-color: deepskyblue;
+            color: white;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        }
+
+        .btn-disease {
+            width: 230px;
+            height: 50px;
+            background-color: deepskyblue;
+            color: white;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        }
+    }
+</style>
+<!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+<![endif]-->
+<!-- Add your site or application content here -->
+<!-- Body main wrapper start -->
+<div class="body-wrapper">
+    <!-- LOGIN AREA START (Register) -->
+    <div class="ltn__login-area pb-110">
+        <div class="container">
+            <div class="col-12">
+                <div class="title text-center">
+                    <h2>CHẨN ĐOÁN</h2>
+                </div>
+                <br>
+                <div class="test">
+                    <div class="test-detail border">
+                        <div class="test-head d-flex justify-content-start">
+                            <div class="bd-highlight" style="margin-left: 10px;"><p>Các triệu chứng cơ bản bạn đang mắc phải: </p></div>
+                        </div>
+                        <div class="test-body-1 row">
+                            <div class="test-body-left d-flex">
+                                <div class="input-select w-100">
+                                    <input type="text" id="trieuchungauto" placeholder="Nhập triệu chứng đang mắc phải ..." class="form-control mt-4" />
+                                </div>
+                                <div class="text-end button-add">
+                                    <button class="btn-select mt-4 float-end" onclick="addTrieuChung(`${$('#trieuchungauto').val()}`)">Thêm vào danh sách</button>
+                                </div>
+                                <div class="text-end button-add-1">
+                                    <button class="btn-select mt-4 float-end" onclick="addTrieuChung(`${$('#trieuchungauto').val()}`)">Thêm</button>
+                                </div>
+                            </div>
+                            <div class="test-body-right">
+                                <div class="mt-4" style="border: 1px solid #dee2e6; overflow: scroll; overflow-x: hidden; height: 180px; ">
+                                    @*<ul class="symptom-list mt-2 ms-4 me-4" id="ListTrieuChung">
+                                    <li><span name="trieuchungOld"></span> <i class="fa fa-trash" aria-hidden="true"></i></li>
+
+                                    </ul>*@
+                                    <div class="symptom-list row m-3" id="ListTrieuChung">
+                                        @*<div class="symptom-item col-sm-4">
+                                        <img src="~/GuestElement/img/circle_PNG17.png" />
+                                        <p>
+                                        Ho
+                                        </p>
+                                        <button><i class="fa fa-trash removeTC" aria-hidden="true"></i></button>
+                                        </div>*@
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="test-foot d-flex justify-content-end">
+                            <!-- <div class="p-2 bd-highlight">C</div> -->
+                            <div class="test-foot-btn p-2 bd-highlight">
+                                <button onclick="GetTrieuChungNew()" id="btNext" disabled style="background-color: deepskyblue">Tiếp theo</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 m-auto mt-5 bg-light" style="border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;" id="LoadingTCNew"><p class="text-center p-2 text-secondary"><i class="fa fa-circle-o-notch fa-spin" style="font-size:15px"></i> Đang tải dữ liệu</p></div>
+                    <div class="test-detail border" id="ResultTCNew">
+                        <div class="test-head d-flex justify-content-start">
+                            <div class="bd-highlight" style="margin-left: 10px;"><p>Các triệu chứng liên quan: </p></div>
+                        </div>
+                        <div class="test-body row" id="ListTrieuChungNew">
+                            <!--Vòng lặp-->
+
+                        </div>
+                        <div class="test-foot d-flex justify-content-end">
+                            <!-- <div class="p-2 bd-highlight">C</div> -->
+                            <div class="test-foot-btn p-2 bd-highlight"><button onclick="FinalCheck()" id="btFinal">Hoàn tất</button></div>
+                        </div>
+                    </div>
+                    <div class="col-2 m-auto mt-5 bg-light" style="border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;" id="LoadingResult"><p class="text-center p-2 text-secondary"><i class="fa fa-circle-o-notch fa-spin" style="font-size:15px"></i> Đang tải dữ liệu</p></div>
+                    <div class="test-result border" id="ResultContent">
+                        <div class="test-head d-flex justify-content-start">
+                            <div class="bd-highlight" style="margin-left: 10px;"><p>Kết quả: </p></div>
+                        </div>
+                        <div class="result-body row">
+                            <div class="result-body-title d-flex justify-content-start">
+                                <div class="bd-highlight">
+                                    <p>
+                                        Dựa theo các triệu chứng mà bạn cung cấp,
+                                        chúng tôi đưa ra kết quả như sau:
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="result-content">
+                                <div class="result-chart" id="chartContainer" style="height: 370px; width: 100%;"></div>
+                                <div class="result-btn">
+                                    <button class="btn-contact mb-2"><i class="fa fa-phone" aria-hidden="true"></i> Liên hệ ngay</button>
+                                    <button onclick="location.href ='@Url.Action("DatLich", "Home")';" class="btn-booking"><i class="fa fa-calendar" aria-hidden="true"></i> Đặt lịch khám</button>
+                                </div>
+                            </div>
+                            <!--Phần modal Thông tin bệnh-->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="border-bottom: 1px solid lightgray;">
+                                            <p style="font-size: 25px; margin: 10px 20px 10px 20px;">Thông tin bệnh</p>
+                                        </div>
+                                        <div class="modal-body" style="overflow: scroll; overflow-x: hidden; height: 400px;">
+                                            Nội dung
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" style="height: 40px; width: 100px; background-color: darkgray" data-bs-dismiss="modal">Đóng</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- LOGIN AREA END -->
+
+
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+@section Scripts{
+
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="~/js/datetime.js"></script>
+
+    <script>
+        var ListTrieuChung = [];
+        $(document).ready(
+
+
+            function () {
+
+                $('#ResultTCNew').hide();
+                $('#LoadingTCNew').hide();
+                $('#LoadingResult').hide();
+                $('#ResultContent').hide();
+
+
+
+                /* Need jquery to be extended with code snippet for selectrange i found somewhere, but forgot where...: */
+
+                $("#trieuchungauto").autocomplete({
+                    source: function (request, response) {
+                        $.ajax({
+                            url: '/api/chandoan/searchtrieuchung',
+                            headers: {
+                                "RequestVerificationToken":
+                                    $('input[name="__RequestVerificationToken"]').val()
+                            },
+                            data: { "term": request.term },
+                            dataType: "json",
+                            success: function (data) {
+                                response($.map(data, function (item) {
+                                    return item;
+                                }))
+                            },
+                            error: function (xhr, textStatus, error) {
+                                alert(xhr.statusText);
+                            },
+                            failure: function (response) {
+                                alert("failure " + response.responseText);
+                            }
+                        });
+                    },
+                    /*   focus: function () { return false; },*/
+                    open: function (event, ui) {
+                        var firstElement = $(this).data("uiAutocomplete").menu.element[0].children[0]
+                            , inpt = $(this)
+                            , original = inpt.val()
+                            , firstElementText = $(firstElement).text();
+
+                        /*
+                           here we want to make sure that we're not matching something that doesn't start
+                           with what was typed in
+                        */
+
+                        if (accents_supr(firstElementText).toLowerCase().indexOf(accents_supr(original).toLowerCase()) === 0) {
+                            inpt.val(firstElementText);//change the input to the first match
+
+                            inpt[0].selectionStart = original.length; //highlight from end of input
+                            inpt[0].selectionEnd = firstElementText.length;//highlight to the end
+                        }
+                    }
+                });
+
+
+                $('#trieuchungauto').on("keyup", function (e) {
+                    if (e.keyCode == 13) {
+                        addTrieuChung($(this).val());
+                        $(this).val("");
+                        if ($('.trieuChungOld').length > 0) {
+                            $('#btNext').prop('disabled', false);
+                        }
+                        else {
+                            $('#btNext').prop('disabled', true);
+                        }
+                    }
+                });
+
+
+
+            });
+
+
+        function addTrieuChung(name) {
+            if (name && name.length > 0) {
+                $('#ListTrieuChung').append(`<div class="symptom-item col-sm-6 trieuChungOld">
+                                                                <img src="~/GuestElement/img/circle_PNG17.png" />
+                                                                <p id="TenTrieuChung" name="TenTrieuChung">${name}</p>
+                                                                <button id="btnTrash"><i class="fa fa-trash removeTC" aria-hidden="true"></i></button>
+                                                            </div>`)
+                $('#trieuchungauto').val("");
+            }
+            if ($('.trieuChungOld').length > 0) {
+                $('#btNext').prop('disabled', false);
+            }
+            else {
+                $('#btNext').prop('disabled', true);
+            }
+
+        }
+
+
+
+
+
+        $(document).on('click', '.remove', function () {
+            $(this).parent().remove();
+
+
+        });
+
+        $(document).on('click', '.removeTC', function () {
+            $(this).parent().parent().remove();
+            if ($('.trieuChungOld').length > 0) {
+                $('#btNext').prop('disabled', false);
+            }
+            else {
+                $('#btNext').prop('disabled', true);
+            }
+
+        });
+
+        //Hàm mở modal của Xác nhận kết quả
+        function GetTrieuChungNew() {
+            $('#ResultTCNew').hide();
+            $('#LoadingTCNew').fadeIn('slow');
+            ListTrieuChung = [];
+            $('#ListTrieuChungNew').val("");
+
+            $(".trieuChungOld").each(function () {
+
+
+
+                ListTrieuChung.push($(this).find("[name='TenTrieuChung']").html());
+
+            });
+
+
+
+
+
+            $.ajax({
+                url: "/api/ChanDoan/GetTrieuChungNew",
+                type: 'Post',
+                data: {
+                    ListTrieuChung: ListTrieuChung
+
+                },
+                success: function (response) {
+                    $('#ResultTCNew').fadeIn('slow');
+                    $('#LoadingTCNew').hide();
+                    $('#ListTrieuChungNew').html("")
+                    if (response.length > 0) {
+                        response.forEach(function (item) {
+                            $('#ListTrieuChungNew').append(`<div class="test-body-item col-sm-4 row" >
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" name="TCNew" value="${item.result}"> ${item.result}
+                                                    </label>
+                                                </div>`)
+                        });
+
+                    }
+                }
+            });
+        }
+
+
+
+
+
+
+
+        function FinalCheck() {
+            $('#LoadingResult').fadeIn('slow');
+            $('#ResultContent').hide();
+            var listOld = ListTrieuChung;
+            var listTCNew = [];
+            $('input[name="TCNew"]:checked').each(function () {
+                listTCNew.push(this.value);
+            });
+            listOld.push.apply(listOld, listTCNew);
+            $.ajax({
+                url: "/api/ChanDoan/KetQuaChanDoan",
+                type: 'Post',
+                data: {
+                    ListTrieuChung: listOld
+
+                }
+
+                ,
+                success: function (response) {
+
+                    var chart = new CanvasJS.Chart("chartContainer", {
+                        animationEnabled: true,
+
+                        axisY: {
+                            valueFormatString: "#,##",
+                            includeZero: true
+                        },
+                        toolTip: {
+                            shared: true
+                        },
+                        legend: {
+                            horizontalAlign: "center",
+                            verticalAlign: "top"
+                        },
+                        data: [{
+                            type: "stackedBar",
+                            name: "Đã chọn",
+                            showInLegend: true,
+                            color: "#4978B1",
+                            yValueFormatString: "#,##",
+                            indexLabel: "{y}",
+                            dataPoints: response.dataPoint1
+                        },
+                        {
+                            type: "stackedBar",
+                            name: "Còn lại",
+                            showInLegend: true,
+                            color: "#7E9BC8",
+                            yValueFormatString: "#,##",
+                            indexLabel: "{y}",
+                            dataPoints: response.dataPoint2
+                        }]
+                    });
+                    chart.render();
+
+                }
+
+            });
+
+            $('#LoadingResult').hide();
+            $('#ResultContent').fadeIn('slow');
+
+        }
+
+
+
+
+    </script>
+}
+
+    @*Thư viện biểu đồ*@
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+

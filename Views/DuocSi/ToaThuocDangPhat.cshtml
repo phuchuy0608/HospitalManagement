@@ -1,0 +1,276 @@
+﻿@model IEnumerable<HospitalManagement.Models.ToaThuoc>
+@{
+    ViewData["Title"] = "TOA THUỐC ĐANG PHÁT";
+    Layout = "~/Views/Shared/LayoutMain/MainLayout.cshtml";
+}
+
+<style>
+    .a {
+        text-decoration: none !important
+    }
+</style>
+
+<div class="block">
+    <div class="block-title">
+        <h2><strong>Toa thuốc đang phát</strong></h2>
+    </div>
+    <div class="d-flex justify-content-between">
+        <div class="w-50">
+            <input class="mr-2 mb-2 form-control" id="TimKiem" placeholder="Nhập từ khóa cần tìm" />
+        </div>
+        <div class="button-reload">
+            <button type="button" class="btn" style="color:white;" onclick="Clear()" id="btSeach"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;Làm mới</button>
+        </div>
+    </div>
+
+    <div id="nameListContainer" class="mt-3">
+        <partial name="_ListToaThuoc" model="@ViewBag.Names as IPagedList<ToaThuoc>" />
+    </div>
+
+
+
+</div>
+
+<div class="modal fade" id="ModalChiTietThuoc" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="myModalContent">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-right">
+                    <button type="button" id="btXacNhan" class="btn"><i class="fas fa-check"></i>&nbsp;Xác nhận</button>
+                    <button type="button" class="btn" style="background-color: #FA4F4F; color: white;" id="btclose" data-bs-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script type="text/javascript" src="~/js/datetime.js"></script>
+
+
+    <script>
+        var table;
+        var obj = {};
+        $(document).ready(
+
+            function () {
+
+                ReloadPage(1);
+
+            });
+
+        //Hàm mở modal của Chi tiết Toa Thuốc Đang phát
+        function Detail(_maPhieu) {
+            $.ajax({
+                url: "/DuocSi/ChiTietDangPhat/",
+                type: 'GET',
+                data: {
+                    MaPhieu: _maPhieu
+                },
+                success: function (response) {
+
+                    $("#myModalContent").html(response);
+                    $('#ModalChiTietThuoc').modal('show');
+                    $('#btXacNhan').show();
+                }
+            });
+        }
+
+        var $id = "";
+        var $modal = $('#myModal');
+        var $myModalContent = $("#myModalContent");
+        var $modalins = $('#myModalins');
+        var $myModalContentins = $("#myModalContentins");
+        var $myModalTitle = $("#myModalTitle");
+        var $myModalTitleins = $("#myModalTitleins");
+
+        function ReloadPage(page) {
+            obj = {};
+
+            obj.Page = page;
+            obj.TrangThaiPK = 1;
+            obj.TrangThai = 1;
+            $("#TimKiem").val("");
+            $.ajax({
+                url: '/DuocSi/ReloadPage/',
+
+                type: "Get",
+                timeout: 20000,
+
+                async: false,
+
+                data: obj,
+
+                success: function (result) {
+
+
+                    $('#nameListContainer').html(result);
+                },
+
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        }
+        $("#TimKiem").keyup(function () {
+
+            obj = {};
+
+            obj.KeyWordSearch = $(this).val()
+            obj.TrangThai = 1;
+            obj.TrangThaiPK = 1;
+            obj.page = 1;
+            $.ajax({
+                url: '/DuocSi/ReloadPage/',
+
+                type: "Get",
+
+
+                data: obj,
+
+                success: function (result) {
+
+
+                    $('#nameListContainer').html(result);
+                },
+
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+
+
+
+
+        });
+
+
+        function Clear() {
+
+
+            ReloadPage(1);
+        }
+
+        function ChangeDoUuTien(_maPK) {
+            Swal.fire({
+                title: 'Bạn có muốn đưa toa thuốc này xuống cuối hàng chờ ?',
+                text: "Thao tác không thể thay đổi !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Huỷ bỏ',
+                confirmButtonText: 'Xác nhận'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/DuocSi/ChangeSoUuTien/",
+                        type: 'POST',
+                        data: {
+                            maPK: _maPK
+                        },
+                        success: function (response) {
+                            if (response.status >= 1) {
+
+                                toastr.success(response.text);
+                                ReloadPage(1);
+                            }
+                            else {
+                                toastr.warning(response.text);
+                            }
+                        },
+                        error: function (errormessage) {
+                            alert(errormessage.responseText);
+                        },
+                        failure: function (message) {
+                            $('#preloader-wrapper').toggleClass('hide');
+                        }
+                    });
+                }
+            })
+        }
+
+        //Sự kiện b
+        $("#btXacNhan").click(function () {
+            $(this).prop("disabled", true);
+
+            $(this).html(
+                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span> Waiting</span>'
+            );
+            $.ajax({
+                type: "POST",
+                url: "/DuocSi/XacNhanThuocDangCho/",
+                data: {
+                    maPK: $("#maPK").val()
+                },
+                success: function (result) {
+
+                    $('#preloader-wrapper').toggleClass('hide');
+                    if (result.status >= 1) {
+
+                        toastr.success(result.text);
+                        window.location.href = result.redirectUrL;
+                    }
+                    else {
+                        toastr.warning(result.text);
+                    }
+                    $("#btXacNhan").prop("disabled", false);
+
+                    $("#btXacNhan").html(
+                        'Retry');
+                },
+                error: function (errormessage) {
+                    $(this).prop("disabled", false);
+
+                    $(this).html(
+                        'Retry');
+                },
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        });
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/signalServer")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+            } catch (err) {
+                console.log(err);
+                setTimeout(start, 5000);
+            }
+        };
+
+        connection.onclose(async () => {
+            await start();
+        });
+
+        // Start the connection.
+        start();
+
+
+        connection.on("SendToaThuocDangPhat", (name) => {
+
+
+
+            toastr.success("Có một toa thuốc dang phát mới");
+            ReloadPage(1);
+
+        });
+
+
+    </script>
+}
+
+

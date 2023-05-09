@@ -1,0 +1,100 @@
+﻿@model TinTuc
+
+@{
+    ViewData["Title"] = Model.TieuDe;
+    Layout = "~/Views/Shared/GuestLayout.cshtml";
+}
+<style>
+    .thumb-img {
+        width: 30%;
+        object-fit: cover;
+        object-position: center center;
+    }
+
+    .thumb-content a p {
+        font-size: 17px;
+        color: #000;
+        font-weight: 600;
+        width: 200px;
+        flex-wrap: wrap;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+</style>
+
+
+
+@if (Model != null)
+{
+    <div class="ltn__shop-details-area pb-85" style="margin-top:100px">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-12">
+                    <!-- Shop Tab Start -->
+                    <div class="ltn__shop-details-tab-inner ltn__shop-details-tab-inner-2">
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="liton_tab_details_1_1">
+                                <div class="ltn__shop-details-tab-content-inner row">
+                                    <h1>
+                                        @Model.TieuDe
+                                    </h1>
+
+                                    <div class="col-sm-6">
+                                        <p><i class="fas fa-tags"></i> @Model.MaTLNavigation.TenTL</p>
+                                    </div>
+
+                                    <div class="text-end col-sm-6" style="font-size: 13px; line-height: 5px;">
+                                        <p><i class="fas fa-user"></i> @Model.MaNguoiVietNavigation.HoTen</p>
+                                        <p><i class="fas fa-calendar-week"></i> @Model.ThoiGian?.ToString("dd/MM/yyyy h:mm tt")</p>
+
+                                    </div>
+
+                                    <div class="mt-3">
+                                        @Html.Raw(Model.NoiDung)
+                                    </div>
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shop Tab End -->
+                </div>
+                <div class="col-lg-4">
+                    <aside class="sidebar ltn__shop-sidebar ltn__right-sidebar">
+                        <!-- Top Rated Product Widget -->
+
+                        <div class="widget ltn__top-rated-product-widget">
+                            <h4 class="ltn__widget-title ltn__widget-title-border">Tin liên quan</h4>
+                            <div class="list-news-contact">
+                                @foreach (var item in ViewBag.TL1)
+                                {
+                                    <div class="news-contact-items mb-4">
+                                        <div class="d-flex">
+                                            <img class="thumb-img" src="@item.Hinh" />
+                                            <div class="thumb-content text-wrap col-sm-9">
+                                                <a asp-controller="Home" asp-action="TinChiTiet" asp-route-id="@item.MaBaiViet">
+                                                    <p class="card-title">@item.TieuDe</p>
+                                                </a>
+                                                <p style="font-size: 10px"><i class="far fa-calendar-alt"></i> 26/4/2023</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                }
+                            </div>
+
+
+                        </div>
+
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+}

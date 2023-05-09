@@ -1,0 +1,345 @@
+﻿@model HospitalManagement.Models.TinTuc
+@{
+    ViewData["Title"] = "THÊM BÀI VIẾT";
+    Layout = "~/Views/Shared/LayoutAdmin/LayoutAdmin.cshtml";
+}
+
+<style>
+    .box-background {
+        background-color: white;
+    }
+
+    .box-title {
+        background-color: rgb(233, 236, 239);
+    }
+
+        .box-title h6 {
+            padding: 10px;
+            font-weight: 600;
+            color: rgb(108, 117, 125);
+        }
+
+    form {
+        padding-inline: 30px;
+    }
+
+    .box-left {
+        margin-left: 10px;
+        width: 67%;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    .box-title-label {
+        width: 150px;
+        height: 40px;
+        background-color: deepskyblue;
+        margin-top: 10px;
+        margin-left: -15px;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+        .box-title-label label {
+            padding: 6px;
+            margin-left: 5px;
+            font-style: italic;
+            font-size: 18px;
+            color: white;
+        }
+
+    .box-left-title .form-floating label {
+        color: gray;
+        font-weight: 400;
+    }
+
+    .box-right {
+        width: 30%;
+        margin-left: 25px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    .box-specialist-label {
+        width: 150px;
+        height: 40px;
+        background-color: deepskyblue;
+        margin-top: 10px;
+        margin-left: -35px;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+        .box-specialist-label label {
+            padding: 6px;
+            margin-left: 5px;
+            font-style: italic;
+            font-size: 18px;
+            color: white;
+        }
+
+    .box-specialist select {
+        color: gray;
+    }
+
+    .box-status-label {
+        width: 150px;
+        height: 40px;
+        background-color: deepskyblue;
+        margin-top: 10px;
+        margin-left: -35px;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+        .box-status-label label {
+            padding: 6px;
+            margin-left: 5px;
+            font-style: italic;
+            font-size: 18px;
+            color: white;
+        }
+
+    .box-status .form-check {
+        margin-left: 20px;
+    }
+
+        .box-status .form-check label {
+            color: gray;
+        }
+
+    .box-content {
+        margin-inline: 5px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    .box-content-label {
+        width: 150px;
+        height: 40px;
+        background-color: deepskyblue;
+        margin-top: 10px;
+        margin-left: -15px;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+        .box-content-label label {
+            padding: 6px;
+            margin-left: 5px;
+            font-style: italic;
+            font-size: 18px;
+            color: white;
+        }
+
+    .box-btn .btn-savee {
+        background-color: deepskyblue;
+        color: white;
+        border: none;
+    }
+
+    .box-btn .btn-closee {
+        background-color: rgb(239, 71, 111);
+        color: white;
+        border: none;
+    }
+
+    .note-editable {
+        background-color: white;
+    }
+
+    .box-button {
+        background-color: deepskyblue;
+        color: white;
+        border: 2px solid deepskyblue;
+        height: 40px;
+        padding: 0 30px 0 30px;
+        transition: 0.25s all;
+        font-weight: 400;
+    }
+
+        .box-button:hover {
+            border: 2px solid deepskyblue;
+            color: deepskyblue;
+            background-color: white;
+        }
+</style>
+
+<div class="box p-3">
+    <div class="box-background">
+        <div class="box-title">
+            <h6>Thêm bài viết</h6>
+        </div>
+        <br />
+        <form class="row g-3" asp-action="ThemTinTuc" asp-controller="TinTuc" method="post">
+            <input asp-for="Hinh" hidden />
+            <div class="box-left form-group">
+                <div class="box-left-title">
+                    <div class="box-title-label">
+                        <label class="form-label">Tiêu đề (*)</label>
+                    </div>
+
+                    <div class="form-floating mt-3 mb-3">
+                        <textarea class="form-control" asp-for="TieuDe" style="height: 130px"></textarea>
+                        <span asp-validation-for="TieuDe" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="box-right form-group row mt-3">
+                <div class="box-specialist">
+                    <div class="box-specialist-label">
+                        <label class="form-label">Thể loại (*)</label>
+                    </div>
+                    <div class="col-12 mt-3 mb-3">
+                        <select asp-for="MaTL" asp-items="@ViewBag.MaTL" class="form-select">
+                            <option value="">Chọn thể loại</option>
+                        </select>
+                        @Html.ValidationMessageFor(model => model.MaTL, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="box-status">
+                    <div class="box-status-label">
+                        <label class="form-label">Trạng thái</label>
+                    </div>
+                    <div class="form-check mt-3 mb-3">
+                        <input asp-for="TrangThai" class="form-check-input" type="checkbox" id="gridCheck">
+                        <label class="form-check-label" for="gridCheck">
+                            Đang hoạt động
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="box-content col-12">
+
+                <div class="d-flex justify-content-between">
+                    <div class="box-content-label mb-3 mt-3">
+                        <label class="form-label">Nội dung (*)</label>
+                    </div>
+                    <div class="mt-2">
+                        <a class="btn text-light" style="background-color: deepskyblue" onclick="_Preview()"><i class="fas fa-eye"></i> Xem trước</a>
+                    </div>
+                </div>
+
+                <div>
+                    <textarea asp-for="NoiDung" rows="20" class="form-control" placeholder="Nhập nội dung ..."></textarea>
+                </div>
+            </div>
+            <div class="box-btn d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn-savee btn" type="submit"><i class="fas fa-save"></i> Xác nhận</button>
+                <a class="btn-closee btn" href="@Url.ActionLink("Index","TinTuc")"><i class="fas fa-close"></i> Đóng</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-fullscreen">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <div id="myModalContent">
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="modal-footer-btn text-right">
+                    <button type="button" class="btn" onclick="CloseModal()" id="btclose" data-bs-dismiss="modal" style="background-color: rgb(239, 71, 111); color: white;"><i class="fa fa-close"></i>&nbsp;Đóng</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+    <link href="~/summernote/summernote-lite.css" rel="stylesheet" />
+    <script src="~/summernote/summernote-lite.js"></script>
+
+    <script>
+        $(document).ready(
+            function () {
+                $('#NoiDung').summernote({
+                    height: 300,                 // set editor height
+                    minHeight: null,             // set minimum height of editor
+                    maxHeight: null,             // set maximum height of editor
+                    focus: true,
+                    callbacks: {
+                        onImageUpload: function (files) {
+                            for (let i = 0; i < files.length; i++) {
+                                UploadImage(files[i]);
+                            }
+                        }
+                    }
+                });
+                function UploadImage(file) {
+                    var url = '@Url.Action("UploadFile", "TinTuc")';
+                    formData = new FormData();
+                    formData.append("aUploadedFile", file);
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (FileUrl) {
+                            $("#Hinh").val(FileUrl);
+                            var imgNode = document.createElement('img');
+                            imgNode.src = FileUrl;
+                            $('#NoiDung').summernote('insertNode', imgNode);
+                        },
+                        error: function (data) {
+                            alert(data.responseText);
+                        }
+                    });
+                }
+                $('.sidebar-mini').addClass("sidebar-collapse");
+            });
+
+        var $id = "";
+        var $modal = $('#myModal');
+        var $myModalContent = $("#myModalContent");
+        var $modalins = $('#myModalins');
+        var $myModalContentins = $("#myModalContentins");
+        var $myModalTitle = $("#myModalTitle");
+        var $myModalTitleins = $("#myModalTitleins");
+
+        function _Preview() {
+            var obj = {};
+            obj.TieuDe = jQuery("textarea#TieuDe").val();
+            obj.MaTL = $('#MaTL').val();
+            obj.NoiDung = jQuery("textarea#NoiDung").val();
+            $myModalContent.html("");
+            $.ajax({
+                url: '/TinTuc/Preview/',
+                type: "POST",
+                timeout: 20000,
+                async: true,
+                data: obj,
+                success: function (result) {
+                    $myModalContent.html(result);
+                    $('#btSave').hide();
+                    $('#btupdate').hide();
+                    $('#btPrint').hide();
+                    $modal.modal('show');
+
+
+                    $('#preloader-wrapper').toggleClass('hide');
+                },
+                failure: function (message) {
+                    $('#preloader-wrapper').toggleClass('hide');
+                }
+            });
+        }
+
+        function CloseModal() {
+            $('#myModalContent').html("");
+        }
+    </script>
+}

@@ -1,0 +1,89 @@
+﻿@model IPagedList<PhieuDatLich>
+
+@using HospitalManagement.Models.SearchModel
+@using X.PagedList.Mvc.Core;
+
+
+@using X.PagedList;
+@using X.PagedList.Web.Common
+
+<div id="list">
+
+    <div style="min-height:400px">
+        <table class="table table-bordered text-center" style="width:100%">
+            <tr id="table-header" class="text-light">
+
+                <th style=" font-size: 2vmin; text-align: left;">
+                    Tên bệnh nhân
+                </th>
+                <th style=" font-size: 2vmin;">
+                    SĐT
+                </th>
+                <th style=" font-size: 2vmin;">
+                    Ngày sinh
+                </th>
+                <th style=" font-size: 2vmin;">
+                    Ngày khám
+                </th>
+                <th style=" font-size: 2vmin;">Thao tác</th>
+            </tr>
+
+            @if ((ViewBag.Names as IEnumerable<PhieuDatLich>).Count() > 0)
+            {
+                @foreach (var item in ViewBag.Names as IEnumerable<PhieuDatLich>)
+                {
+                    <tr>
+                        <td style="text-align: left; font-size: 2vmin;">@item.TenBN</td>
+                        <td style="font-size: 2vmin;">@item.SDT</td>
+                        <td style="font-size: 2vmin;">@item.NgaySinh?.ToString("dd/MM/yyyy")</td>
+                        <td style="font-size: 2vmin;">@item.NgayKham?.ToString("dd/MM/yyyy hh:mm tt")</td>
+                        <td>
+                            <a onclick=Edit('@item.MaPhieu') class='btn btn-info btn-sm btn-sm active'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></a>
+                            <a class='btn btn-info btn-sm active' onclick="_delete('@item.MaPhieu')"> <i class='fa fa-trash'></i></a>
+                            <a onclick=Detail('@item.MaPhieu') class='btn btn-info btn-sm active' title='Thông tin'> <i class='fa fa-info-circle' aria-hidden='true'></i></a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center">Không có dữ liệu</td>
+                </tr>
+            }
+
+        </table>
+    </div>
+
+
+    <div style="float:right">
+
+        @{
+            var pageRender = new PagedListRenderOptions
+            {
+                MaximumPageNumbersToDisplay = 5,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+                DisplayLinkToLastPage = PagedListDisplayMode.Never,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                DisplayPageCountAndCurrentLocation = false,
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new string[] { "page-item" },
+                PageClasses = new string[] { "page-link" },
+
+
+                ContainerDivClasses = new[] { "pagination-container" }
+
+
+            };
+        }
+        @{
+            var searchModel = ViewBag.Data as PhieuDatLichSearchModel;
+        }
+        <input class="d-none" id="CurrentPage" value="@ViewBag.Page" />
+
+
+        @Html.PagedListPager((IPagedList<PhieuDatLich>)ViewBag.Names, page => Url.Action("ReloadPage", new { page, KeywordSearch = searchModel.KeywordSearch }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(pageRender, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "nameListContainer" }))
+    </div>
+
+</div>

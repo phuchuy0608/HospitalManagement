@@ -1,0 +1,124 @@
+﻿@model IEnumerable<Thuoc>
+
+<style>
+    /* định dạng thẻ div chưa các button tab */
+    div.tab-modal {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        border-bottom: none;
+        background-color: #ffff;
+    }
+
+        /* định dạng các button tab */
+        div.tab-modal button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+            font-weight: 600;
+        }
+    /* định dạng nội dung hiển thị */
+    .tabcontent {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+    }
+</style>
+
+<div class="pt-3">
+    <h4 style="text-align:center; font-weight:bold">Toa Thuốc</h4>
+    <hr />
+</div>
+
+<div class="modal-body">
+    <div class="col-10 m-auto">
+        <div class="tab-modal" id="tabModal" style="display: inline-flex">
+            <button id="tab1" onclick="showDonThuoc()" class="tablinks active" style="font-size: 2.5vmin;">Tìm kiếm thuốc</button>
+            <button id="tab2" onclick="showThongTin()" class="tablinks" style="font-size: 2.5vmin;">Danh sách thuốc</button>
+        </div>
+        <div id="PHP" class="tabcontent p-3">
+            <input class="form-control" id="SearchThuoc" placeholder="Nhâp tên thuốc cần tìm" />
+        </div>
+        <div id="HTML" class="tabcontent">
+            <table class="table table-bordered" id="danhSach" style="width:100%">
+                <thead>
+                    <tr>
+
+                        <th class="col-8">Tên thuốc</th>
+                        <th class="col-4 text-center">Thao tác</th>
+                        <th class="d-none"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@item.TenThuoc</td>
+                            <td class="text-center"><button class="btn btn-sm addThuoc" id="btnAddThuoc" style="border-radius: 50%;"><i class="fas fa-plus"></i></button> | <button class="btn-info btn btn-sm active " onclick="_Detail('@item.MaThuoc')" style="border-radius: 60px;"><i class="fa fa-info-circle"></i></button></td>
+                            <td class="d-none">@item.MaThuoc</td>
+                        </tr>
+                    }
+
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="mt-5">
+        <table class="table table-striped">
+            <tr id="table-header" class="text-light">
+                <th class="col-8">Tên thuốc</th>
+                <th class="col-2">Số lượng</th>
+                <th class="col-2">Thao tác</th>
+
+            </tr>
+            <tbody id="listToaThuoc">
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+
+    <button type="button" class="btn" id="btSave" style="margin-left: 5px;" data-bs-dismiss="modal" onclick="ConfirmToaThuoc()">Xác nhận</button>
+</div>
+
+<script type="text/javascript">
+    var buttons = document.getElementsByClassName('tablinks');
+    var contents = document.getElementsByClassName('tabcontent');
+
+    function showDonThuoc() {
+        $('.tabcontent').each(function () {
+
+            $(this).prop('style', 'display: none');
+        });
+
+        $('#PHP').prop('style', 'display: block');
+    }
+    function showThongTin() {
+        $('.tabcontent').each(function () {
+
+            $(this).prop('style', 'display: none');
+        });
+
+        $('#HTML').prop('style', 'display: block');
+    }
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function () {
+            var id = this.textContent;
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            this.className += " active";
+            showContent(id);
+        });
+    }
+    showDonThuoc();
+
+</script>
+
